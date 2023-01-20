@@ -14,7 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.db.models.signals import post_save
 from django.urls import path
+
+from DataFetcher.tasks import run, stop
+from shared.models import Provider
+from django.dispatch import receiver
+
+
+# run()
+
+
+@receiver(post_save, sender=Provider)
+def my_callback(sender, instance, created, **kwargs):
+    stop()
+    run()
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
