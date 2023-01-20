@@ -3,29 +3,48 @@ from django.contrib.auth.models import User
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=True)
     is_featured_category = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
 
 class Provider(models.Model):
-    name = models.CharField(max_length=200)
-    url = models.URLField()
-    is_active = models.BooleanField(default=True)
+    dashboard = models.URLField()
+    host = models.CharField(max_length=10)
+    path = models.CharField(max_length=50)
+    token = models.CharField(max_length=10)
+    requests_nb = models.IntegerField()
+    dataPath_map = models.CharField(max_length=20)
+    title_map = models.CharField(max_length=20)
+    subTitle_map = models.CharField(max_length=20)
+    content_map = models.CharField(max_length=20)
+    imageUrl_map = models.CharField(max_length=20)
+    provider_map = models.CharField(max_length=20)
+    publishedAt_map = models.CharField(max_length=20)
+    source_map = models.CharField(max_length=20)
+    category_map = models.CharField(max_length=20)
+    author_map = models.CharField(max_length=20)
+    is_active = models.BooleanField(default=False)
+
+
+class NewsSource(models.Model):
+    name = models.CharField(max_length=20, null=True)
+    is_active = models.BooleanField(default=False)
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=200)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(max_length=200, null=True)
+    is_active = models.BooleanField(default=False)
 
 
 class News(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     subtitle = models.CharField(max_length=200)
     content = models.TextField()
     publish_date = models.DateTimeField()
     url_image = models.URLField()
     news_provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    news_source = models.ForeignKey(NewsSource, on_delete=models.CASCADE)
     source = models.URLField()
     news_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     news_author = models.ForeignKey(Author, on_delete=models.CASCADE)

@@ -1,0 +1,82 @@
+[
+  {
+    "active": true,
+    "host": "HOST1",
+    "path": "/v2/top-headlines?country=us&apiKey=",
+    "token": "TOKEN1",
+    "requestNb": 10,
+    "mapping": {
+      "dataPath": "articles",
+      "title": "title",
+      "subTitle": "description",
+      "content": "content",
+      "imageUrl": "urlToImage",
+      "provider": "name",
+      "publishedAt": "publishedAt",
+      "source": "url",
+      "category": "category",
+      "author": "author"
+    },
+    "error": "no category"
+  },
+  {
+    "active": false,
+    "host": "HOST2",
+    "path": "/v1/news/all?language&api_token=",
+    "token": "TOKEN2",
+    "requestNb": 150,
+    "mapping": {
+      "dataPath": "data",
+      "title": "title",
+      "subTitle": "snippet",
+      "content": "description",
+      "imageUrl": "image_url",
+      "provider": "source",
+      "publishedAt": "published_at",
+      "source": "url",
+      "category": "categories",
+      "author": "title"
+    },
+    "error": "author not found"
+  },
+  {
+    "active": false,
+    "host": "HOST3",
+    "path": "/v1/news?sources=en&access_key=",
+    "token": "TOKEN3",
+    "requestNb": 16,
+    "mapping": {
+      "dataPath": "data",
+      "title": "title",
+      "subTitle": "description",
+      "content": "description",
+      "imageUrl": "image",
+      "provider": "source",
+      "publishedAt": "published_at",
+      "source": "url",
+      "category": "category",
+      "author": "author"
+    },
+    "error": "author is null; subtitle not found;"
+  },
+  {
+    "active": false,
+    "host": "HOST4",
+    "path": "/api/1/news?language=en&apikey=",
+    "token": "TOKEN4",
+    "requestNb": 200,
+    "mapping": {
+      "dataPath": "results",
+      "title": "title",
+      "subTitle": "description",
+      "content": "content",
+      "imageUrl": "image_url",
+      "provider": "source_id",
+      "publishedAt": "pubDate",
+      "source": "link",
+      "category": "category",
+      "author": "creator"
+    },
+    "error": "author is null; content is null; image url is null"
+  }
+]
