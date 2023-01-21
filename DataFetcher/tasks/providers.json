@@ -1,0 +1,82 @@
+[
+  {
+    "active": false,
+    "host": "newsapi.org",
+    "path": "/v2/top-headlines?country=us&apiKey=",
+    "token": "eb9c0e6c72c34ceb802891b4541565b4",
+    "requestNb": 10,
+    "mapping": {
+      "dataPath": "articles",
+      "title": "title",
+      "subTitle": "description",
+      "content": "content",
+      "imageUrl": "urlToImage",
+      "provider": "name",
+      "publishedAt": "publishedAt",
+      "source": "url",
+      "category": "title",
+      "author": "author"
+    },
+    "error": "no category"
+  },
+  {
+    "active": false,
+    "host": "api.thenewsapi.com",
+    "path": "/v1/news/all?language&api_token=",
+    "token": "4yZXw1TiQcsYZtae1OBqs8LYk7mNwKGbC0aMAjZO",
+    "requestNb": 150,
+    "mapping": {
+      "dataPath": "data",
+      "title": "title",
+      "subTitle": "snippet",
+      "content": "description",
+      "imageUrl": "image_url",
+      "provider": "source",
+      "publishedAt": "published_at",
+      "source": "url",
+      "category": "categories",
+      "author": "title"
+    },
+    "error": "author not found"
+  },
+  {
+    "active": false,
+    "host": "api.mediastack.com",
+    "path": "/v1/news?sources=en&access_key=",
+    "token": "e746333ef1d3693f4691a18a55fd1d62",
+    "requestNb": 16,
+    "mapping": {
+      "dataPath": "data",
+      "title": "title",
+      "subTitle": "description",
+      "content": "description",
+      "imageUrl": "image",
+      "provider": "source",
+      "publishedAt": "published_at",
+      "source": "url",
+      "category": "category",
+      "author": "author"
+    },
+    "error": "author is null; subtitle not found;"
+  },
+  {
+    "active": false,
+    "host": "newsdata.io",
+    "path": "/api/1/news?language=en&apikey=",
+    "token": "pub_15752d750e91ac4dd2788e1c66217c031e93d",
+    "requestNb": 200,
+    "mapping": {
+      "dataPath": "results",
+      "title": "title",
+      "subTitle": "description",
+      "content": "content",
+      "imageUrl": "image_url",
+      "provider": "source_id",
+      "publishedAt": "pubDate",
+      "source": "link",
+      "category": "category",
+      "author": "creator"
+    },
+    "error": "author is null; content is null; image url is null"
+  }
+]

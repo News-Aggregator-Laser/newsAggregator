@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 import schedule
 
@@ -6,7 +5,7 @@ from DataFetcher.tasks import RequestProvider
 
 
 class RequestProvidersScheduler:
-    def __init__(self, providers: List[RequestProvider], debug: Optional[bool] = False):
+    def __init__(self, providers: list[RequestProvider], debug: bool = False):
         self.providers = providers
         self._debug = debug
         self.running = True

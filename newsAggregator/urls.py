@@ -18,11 +18,13 @@ from django.db.models.signals import post_save
 from django.urls import path
 
 from DataFetcher.tasks import run, stop
-from shared.models import Provider
+from DataFetcher.tasks.ProviderFill import fill
+from news.models import Provider
 from django.dispatch import receiver
 
+run()
 
-# run()
+# fill()
 
 
 @receiver(post_save, sender=Provider)

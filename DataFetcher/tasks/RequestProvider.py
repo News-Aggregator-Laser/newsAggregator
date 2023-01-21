@@ -5,7 +5,7 @@ import requests
 from django.db import IntegrityError
 from jsonpath_ng import parse
 
-from shared.models import News, Provider, Category, Author, NewsSource
+from news.models import News, Provider, Category
 
 
 class RequestProvider:
@@ -82,24 +82,28 @@ class RequestProvider:
             author = get_value(author_expr)
             if (not title) or (not sub_title) or (not content) or (not url_to_image) or (not published_at) or (not src):
                 continue
-            try:
-                news_source_m = NewsSource.objects.get(name=provider)
-            except NewsSource.DoesNotExist:
-                news_source_m = NewsSource(name=provider)
-                news_source_m.save()
+            # try:
+            #     news_source_m = NewsSource.objects.get(name=provider)
+            # except NewsSource.DoesNotExist:
+            #     news_source_m = NewsSource(name=provider)
+            #     news_source_m.save()
             try:
                 category_m = Category.objects.get(name=category)
             except Category.DoesNotExist:
                 category_m = Category(name=category)
                 category_m.save()
-            try:
-                author_m = Author.objects.get(name=author)
-            except Author.DoesNotExist:
-                author_m = Author(name=author)
-                author_m.save()
+            # try:
+            #     author_m = Author.objects.get(name=author)
+            # except Author.DoesNotExist:
+            #     author_m = Author(name=author)
+            #     author_m.save()
+            # try:
+            #     category_m = Category.objects.get(name=category)
+            # except Category.DoesNotExist:
+            #     pass
             provider_m = Provider.objects.get(host=self.provider.host)
             news_m = News(title=title, subtitle=sub_title, content=content, url_image=url_to_image, news_provider=provider_m,
-                          publish_date=published_at, source=src, news_category=category_m, news_author=author_m, news_source=news_source_m)
+                          publish_date=published_at, source=src, news_category=category_m, news_author=author, news_source=provider)
             try:
                 news_m.save()
             except IntegrityError:
