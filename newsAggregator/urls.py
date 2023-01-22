@@ -14,14 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.urls import include
 from django.urls import path
 
 from api.views import ReadLaterViewSet, HistoryViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('create-read-later/', ReadLaterViewSet.as_view({'post': 'create'})),
     path('create-history/', HistoryViewSet.as_view({'post': 'create'})),
     path('delete-read-later/<int:pk>', ReadLaterViewSet.as_view({'delete': 'update'})),
     path('delete-history/<int:pk>', HistoryViewSet.as_view({'delete': 'update'})),
+    path('', include('news.urls')),
 ]
