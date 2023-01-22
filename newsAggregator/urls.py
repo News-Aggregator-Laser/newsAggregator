@@ -21,7 +21,6 @@ from api.views import ReadLaterViewSet, HistoryViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('admin/', admin.site.urls),
     path('create-read-later/', ReadLaterViewSet.as_view({'post': 'create'})),
     path('create-history/', HistoryViewSet.as_view({'post': 'create'})),
     path('delete-read-later/<int:pk>', ReadLaterViewSet.as_view({'delete': 'update'})),
