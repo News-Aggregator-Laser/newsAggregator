@@ -1,11 +1,20 @@
 import json
 import time
-
+import ast
 import requests
 from django.db import IntegrityError
 from jsonpath_ng import parse
 
 from news.models import News, Provider, Category
+
+
+def _parse_list_str(list_str: str) -> list[str]:
+    lst = [category.strip() for category in ast.literal_eval(list_str)]
+    if len(lst) == 0:
+        lst = ["General"]
+    if len(lst) > 1 and "general" in lst:
+        lst.remove("general")
+    return lst
 
 
 class RequestProvider:
@@ -52,7 +61,7 @@ class RequestProvider:
         print("\tHandling...")
         print(f"{type(response) = }")
         print(f"{len(response) = }")
-        print(response[0: len(response) // 4])
+        print(response[0 : len(response) // 4])
         response = json.loads(response.decode())
         title_expr = parse("$.." + self.provider.title_map)
         sub_title_expr = parse("$.." + self.provider.subTitle_map)
@@ -79,9 +88,16 @@ class RequestProvider:
             published_at = get_value(published_at_expr)
             src = get_value(src_expr)
             category = get_value(category_expr)
+
+            # if category is literal list
+            if "[" in category:
+                category = _parse_list_str(category)[0]
+
             author = get_value(author_expr)
-            if (not title) or (not sub_title) or (not content) or (not url_to_image) or (not published_at) or (not src):
+
+            if not all((title, sub_title, content, url_to_image, published_at, src)):
                 continue
+
             # try:
             #     news_source_m = NewsSource.objects.get(name=provider)
             # except NewsSource.DoesNotExist:
@@ -102,8 +118,18 @@ class RequestProvider:
             # except Category.DoesNotExist:
             #     pass
             provider_m = Provider.objects.get(host=self.provider.host)
-            news_m = News(title=title, subtitle=sub_title, content=content, url_image=url_to_image, news_provider=provider_m,
-                          publish_date=published_at, source=src, news_category=category_m, news_author=author, news_source=provider)
+            news_m = News(
+                title=title,
+                subtitle=sub_title,
+                content=content,
+                url_image=url_to_image,
+                news_provider=provider_m,
+                publish_date=published_at,
+                source=src,
+                news_category=category_m,
+                news_author=author,
+                news_source=provider,
+            )
             try:
                 news_m.save()
             except IntegrityError:
