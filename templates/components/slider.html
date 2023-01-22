@@ -1,0 +1,25 @@
+<div class="swiper top-swiper">
+    <div class="swiper-wrapper top-swiper-wrapper">
+        {% for article in top_news %}
+        <div class="swiper-slide top-swiper-slide">
+            <a href="#">
+                <img src="{{ article.url_image }}" alt="{{ article.title }}">
+            </a>
+            <div class="article-info">
+                <h1>{{ article.title }}</h1>
+                <h3>{{ article.subtitle }}</h3>
+                <br>
+                <div class="article-sub-info">
+                    <div class="category">
+                        <p>{{ article.news_category }}</p>
+                    </div>
+                    <p>{{ article.news_author }} - {{ article.publish_date }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination top-swiper-pagination"></div>
+</div>

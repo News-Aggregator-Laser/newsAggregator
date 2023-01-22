@@ -1,0 +1,29 @@
+{% extends '__base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<!-- Top News Slider -->
+{% include "components/slider.html" %}
+
+<!-- Top Categories News -->
+<section class="top-categories-news">
+    {% for category, articles in top_categories_news.items %}
+    {% include "components/top_category_news.html" %}
+    <div class="end-top-categories-news-line"></div>
+    {% endfor %}
+</section>
+
+<!--Popular News-->
+<section class="articles-display-section popular-section">
+    <h1>Popular Now <object class="trend-svg" data="{% static 'svgs/trend-up-bold-svgrepo-com.svg' %}"
+            type="image/svg+xml"></object></h1>
+    <div class="articles-section">
+        {% for article in popular_news %}
+        {% include "components/article.html" %}
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

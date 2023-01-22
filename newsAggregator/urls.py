@@ -15,14 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.db.models.signals import post_save
-from django.urls import path
+from django.urls import path, include
 
 from DataFetcher.tasks import run, stop
 from DataFetcher.tasks.ProviderFill import fill
 from news.models import Provider
 from django.dispatch import receiver
 
-run()
+# run()
 
 # fill()
 
@@ -34,5 +34,6 @@ def my_callback(sender, instance, created, **kwargs):
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+    path("", include("news.urls")),
 ]
