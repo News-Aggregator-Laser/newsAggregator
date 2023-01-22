@@ -15,14 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.db.models.signals import post_save
-from django.urls import path
+from django.urls import path, include
 
 from DataFetcher.tasks import run, stop
 from DataFetcher.tasks.ProviderFill import fill
+from api.views import ReadLaterViewSet, HistoryViewSet
 from news.models import Provider
 from django.dispatch import receiver
+from rest_framework import routers
 
-run()
+
+# run()
+
 
 # fill()
 
@@ -33,6 +37,13 @@ def my_callback(sender, instance, created, **kwargs):
     run()
 
 
+# router = routers.DefaultRouter()
+# router.register(r'read-later', ReadLaterViewSet)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('create-read-later/', ReadLaterViewSet.as_view({'post': 'create'})),
+    path('create-history/', HistoryViewSet.as_view({'post': 'create'})),
+    path('delete-history/<int:pk>', HistoryViewSet.as_view({'delete': 'update'})),
+    path('delete-history/<int:pk>', HistoryViewSet.as_view({'delete': 'update'})),
 ]
