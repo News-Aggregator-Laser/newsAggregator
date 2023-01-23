@@ -1,3 +1,4 @@
+import time
 
 import schedule
 
@@ -26,6 +27,7 @@ class RequestProvidersScheduler:
             print("Done")
         while self.running:
             schedule.run_pending()
-        print("Done")
+            time.sleep(0.01)
+        print("Done Stopped")
 
 

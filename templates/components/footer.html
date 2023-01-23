@@ -10,12 +10,15 @@
     <div class="info-section">
         <div class="container">
             <div class="col-1">
-                <h1>LOGO</h1>
-                <p class="logo-text">This website is the final project of MFE program (Group 4).</p>
+                <img class="logo" src="{{ cms.logo }}">
+                <p class="logo-text">
+                <h3>{{ cms.title }}</h3>
+                {{ cms.description }}
+                </p>
                 <p class="copyright-text">Copyright reserved (c) 2023</p>
             </div>
             <div class="category-container">
-                <h2 class="categ-text">Categories</h2>
+                <h2 class="category-text">Categories</h2>
                 <div class="category">
                     <h4><a href="#">{{ selected_categories.0 }}</a></h4>
                 </div>
@@ -54,9 +57,9 @@
             <div class="col-3">
                 <h2>Follow us</h2>
                 <div class="social-icons">
-                    <a href="#"><i class="bi bi-instagram"></i></a>
-                    <a href="#"><i class="bi bi-facebook"></i></a>
-                    <a href="#"><i class="bi bi-twitter"></i></a>
+                    <a href="{{ cms.instagram }}"><i class="bi bi-instagram"></i></a>
+                    <a href="{{ cms.facebook }}"><i class="bi bi-facebook"></i></a>
+                    <a href="{{ cms.twitter }}"><i class="bi bi-twitter"></i></a>
                 </div>
             </div>
         </div>

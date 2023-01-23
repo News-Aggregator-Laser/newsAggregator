@@ -83,25 +83,13 @@ class ReadLater(models.Model):
 class CMS(models.Model):
     logo = models.URLField()
     footer_title = models.CharField(max_length=50)
-    category1 = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="featured_category1"
-    )
-    category2 = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="featured_category2"
-    )
-    category3 = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="featured_category3"
-    )
-    category4 = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="featured_category4"
-    )
-    category5 = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="featured_category5"
-    )
-    category6 = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="featured_category6"
-    )
     footer_description = models.CharField(max_length=150)
+    category1 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category1")
+    category2 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category2")
+    category3 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category3")
+    category4 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category4")
+    category5 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category5")
+    category6 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category6")
     instagram_url = models.URLField(default=None)
     facebook_url = models.URLField(default=None)
     twitter_url = models.URLField(default=None)
@@ -111,7 +99,6 @@ class CMS(models.Model):
 
     def __str__(self) -> str:
         return f"CMS {self.id}"
-
 
 # class NewsSource(models.Model):
 #     name = models.CharField(max_length=20, null=True)

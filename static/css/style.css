@@ -588,6 +588,11 @@ footer .category a {
     clear: both;
 }
 
-.categ-text {
+.category-text {
     margin-left: 100px;
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
 }
