@@ -59,9 +59,9 @@ class RequestProvider:
     def handle_response(self, response):
         print(self._host)
         print("\tHandling...")
-        # print(f"{type(response) = }")
-        # print(f"{len(response) = }")
-        # print(response[0 : len(response) // 4])
+        print(f"{type(response) = }")
+        print(f"{len(response) = }")
+        print(response[0: len(response) // 4])
         response = json.loads(response.decode())
         title_expr = parse("$.." + self.provider.title_map)
         sub_title_expr = parse("$.." + self.provider.subTitle_map)
@@ -90,8 +90,8 @@ class RequestProvider:
             category = get_value(category_expr)
 
             # if category is literal list
-            print(f"{type(category) = }")
-            print(f"Category before: {category}")
+            # print(f"{type(category) = }")
+            # print(f"Category before: {category}")
             if not category:
                 category = "general"
 
@@ -104,7 +104,7 @@ class RequestProvider:
 
                 category = category[0]
 
-            print(f"{category = }")
+            # print(f"{category = }")
             author = get_value(author_expr)
 
             if not all((title, sub_title, content, url_to_image, published_at, src)):
