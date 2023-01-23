@@ -10,8 +10,10 @@
 <!-- Top Categories News -->
 <section class="top-categories-news">
     {% for category, articles in top_categories_news.items %}
+    {% if articles %}
     {% include "components/top_category_news.html" %}
     <div class="end-top-categories-news-line"></div>
+    {% endif %}
     {% endfor %}
 </section>
 
