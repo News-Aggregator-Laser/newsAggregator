@@ -1,3 +1,5 @@
+{% load static %}
+
 <header>
     <div class="header">
         <div id="search-btn">
@@ -17,7 +19,8 @@
         </div>
 
         <div class="logo-cont">
-            <img class="logo" src="{{ cms.logo }}">
+            <object style="z-index: 150;" class="logo-svg" data="{% static 'svgs/logo.svg' %}"
+                type="image/svg+xml"></object>
         </div>
 
         <div class="categories-cont">

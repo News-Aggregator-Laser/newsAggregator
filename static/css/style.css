@@ -23,6 +23,10 @@ i {
     justify-content: center;
 }
 
+.logo-svg {
+    width: 170px;
+}
+
 
 /*============= Scroll Bar =============*/
 body::-webkit-scrollbar {
@@ -166,7 +170,7 @@ header i {
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .top-swiper .img {
@@ -240,7 +244,7 @@ header i {
 /*============= Article (component) =============*/
 .article {
     width: 600px;
-    height: 150px;
+    height: 200px;
     margin-top: 1vh;
     display: flex;
     justify-content: flex-start;
@@ -271,8 +275,14 @@ header i {
 .article .article-img-cont img {
     width: 100%;
     height: 100%;
+    object-fit: scale-down;
 }
 
+.article .read-later-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
 
 /*============= Articles Section =============*/
 .articles-section {
