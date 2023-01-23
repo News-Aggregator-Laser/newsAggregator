@@ -1,8 +1,8 @@
 <div class="article-container">
     <div class="article">
         <div class="article-info-cont">
-            <h3><a href="#">{{ article.title }}</a></h3>
-            <p>{{ article.subtitle }}</p>
+            <h3><a href="#">{{ article.title|truncatechars:100 }}</a></h3>
+            <p>{{ article.subtitle|truncatechars:150 }}</p>
             <br>
         </div>
         <div class="article-img-cont">
