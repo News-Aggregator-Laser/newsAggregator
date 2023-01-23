@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import *
 
+
 # Create your views here.
 def _common_vars() -> dict:
     return {
@@ -14,6 +15,14 @@ def _common_vars() -> dict:
             CMS.objects.first().category6,
         ],
         "all_categories": Category.objects.all(),
+        "cms": {
+            "logo": CMS.objects.first().logo,
+            "title": CMS.objects.first().footer_title,
+            "description": CMS.objects.first().footer_description,
+            "facebook": CMS.objects.first().facebook_url,
+            "instagram": CMS.objects.first().instagram_url,
+            "twitter": CMS.objects.first().twitter_url
+        }
     }
 
 
