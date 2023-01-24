@@ -75,11 +75,11 @@ class RequestProvider:
 
         def get_value(expr):
             try:
-                return expr.find(new)[0].value
+                return expr.find(news)[0].value
             except IndexError:
                 return None
 
-        for new in response[self.provider.dataPath_map]:
+        for news in response[self.provider.dataPath_map]:
             title = get_value(title_expr)
             sub_title = get_value(sub_title_expr)
             content = get_value(content_expr)
@@ -88,38 +88,39 @@ class RequestProvider:
             published_at = get_value(published_at_expr)
             src = get_value(src_expr)
             category = get_value(category_expr)
+            author = get_value(author_expr)
 
             # if category is literal list
             # print(f"{type(category) = }")
             # print(f"Category before: {category}")
             if not category:
                 category = "general"
-
             elif type(category) is str and "[" in category:
                 category = _parse_list_str(category)[0]
-
             elif type(category) is list:
                 if len(category) > 1 and "general" in category:
                     category.remove("general")
-
                 category = category[0]
-
             # print(f"{category = }")
-            author = get_value(author_expr)
-
+            if not author:
+                author = "Unknown"
+            elif type(author) is str and "[" in author:
+                author = _parse_list_str(author)[0]
+            elif type(author) is list:
+                author = author[0]
             if not all((title, sub_title, content, url_to_image, published_at, src)):
                 continue
 
-            # try:
-            #     news_source_m = NewsSource.objects.get(name=provider)
-            # except NewsSource.DoesNotExist:
-            #     news_source_m = NewsSource(name=provider)
-            #     news_source_m.save()
             try:
                 category_m = Category.objects.get(name=category)
             except Category.DoesNotExist:
                 category_m = Category(name=category)
                 category_m.save()
+            # try:
+            #     news_source_m = NewsSource.objects.get(name=provider)
+            # except NewsSource.DoesNotExist:
+            #     news_source_m = NewsSource(name=provider)
+            #     news_source_m.save()
             # try:
             #     author_m = Author.objects.get(name=author)
             # except Author.DoesNotExist:
