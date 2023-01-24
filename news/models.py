@@ -39,13 +39,13 @@ class Provider(models.Model):
 
 class News(models.Model):
     title = models.CharField(max_length=200, unique=True)
-    subtitle = models.CharField(max_length=200)
+    subtitle = models.TextField()
     content = models.TextField()
     publish_date = models.DateTimeField()
     url_image = models.URLField()
     news_provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
     # news_source = models.ForeignKey(NewsSource, on_delete=models.CASCADE)
-    news_source = models.CharField(max_length=100,null=True)
+    news_source = models.CharField(max_length=100, null=True)
     source = models.URLField()
     news_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     # news_author = models.ForeignKey(Author, on_delete=models.CASCADE)
