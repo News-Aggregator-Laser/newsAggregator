@@ -3,26 +3,32 @@ readLaterButtons.forEach(button => {
     button.addEventListener('click', event => {
         const postId = button.getAttribute('data-post-id');
         let url, body, method;
+        // add to read-later
         if (button.classList.contains("bi-bookmark")) {
             url = `/read-later/`;
             method = 'POST';
-            body = JSON.stringify({'news': postId});
-        } else {
+            body = JSON.stringify({ 'news': postId });
+            button.querySelector("span").innerHTML = "Remove from Read-Later";
+        }
+        // remove from read-later
+        else {
             url = `/read-later/` + postId;
             method = "delete"
+            button.querySelector("span").innerHTML = "Add to Read-Later";
         }
+        // Send the request
         fetch(url, {
             method,
-            headers: {'Content-Type': 'application/json', "X-CSRFToken": csrftoken},
+            headers: { 'Content-Type': 'application/json', "X-CSRFToken": csrftoken },
             body,
 
         })
-            .then(response => response)
-            .then(data => {
-                // Update the UI with the new like count
-                button.classList.toggle('bi-bookmark');
-                button.classList.toggle('bi-bookmark-fill');
-            });
-
+            .then(response => {
+                // if request is successful (action is performed)
+                if (response.status == 201) {
+                    button.classList.toggle('bi-bookmark');
+                    button.classList.toggle('bi-bookmark-fill');
+                }
+            })
     });
 });
