@@ -4,10 +4,22 @@
     </div>
     <h1>{{ article.title }}</h1>
     <h3> {{ article.subtitle }} </h3>
-    <p>{{ article.news_author}} - {{ article.publish_date}}</p>
+    <p>{{ article.news_author }} - {{ article.publish_date }}</p>
     <img src="{{ article.url_image }}" alt="{{ article.title }}">
     <div>
         {{ article.content }}
-        source: <a href="{{ article.source}}">{{ article.news_source }}</a>
+        source: <a href="{{ article.source }}">{{ article.news_source }}</a>
     </div>
 </div>
+<script>
+    const data = {'news': {{ article.id }},};
+    fetch(`/history/`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', "X-CSRFToken": csrftoken},
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+
+        });
+</script>

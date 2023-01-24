@@ -7,7 +7,8 @@
         </div>
         <div class="article-img-cont">
             <img src="{{ article.url_image }}" alt="{{ article.title }}">
-            <i class="bi bi-bookmark read-later-btn">
+            <i class="bi {% if article.readLater %}bi-bookmark-fill{% else %}bi-bookmark{% endif %} read-later-btn"
+               data-post-id="{{ article.id }}">
                 <span class="read-later-tooltip">Add To Read-Later</span>
             </i>
         </div>

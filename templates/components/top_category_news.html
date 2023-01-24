@@ -6,16 +6,16 @@
     <div class="swiper category-swiper">
         <div class="swiper-wrapper category-swiper-wrapper">
             {% for article in articles %}
-            <div class="swiper-slide category-swiper-slide">
-                <div class="article-info">
-                    <h2>{{ article.title }}</h2>
-                    <h4>{{ article.subtitle }}</h4>
-                    <br>
-                    <a href="#">read >></a>
+                <div class="swiper-slide category-swiper-slide">
+                    <div class="article-info">
+                        <h2>{{ article.title }}</h2>
+                        <h4>{{ article.subtitle }}</h4>
+                        <br>
+                        <a href="#">read >></a>
+                    </div>
+                    <img src="{{ article.url_image }}" alt="">
+                    <div class="swiper-pagination category-swiper-pagination"></div>
                 </div>
-                <img src="{{ article.url_image }}" alt="">
-                <div class="swiper-pagination category-swiper-pagination"></div>
-            </div>
             {% endfor %}
         </div>
     </div>

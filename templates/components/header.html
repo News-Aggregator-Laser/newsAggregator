@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <a class="logo-cont" href="/home">
+        <a class="logo-cont" href="/">
             <img class="logo-svg" src="{% static 'svgs/logo.svg' %}" alt="our very nice logo ;)">
         </a>
 
@@ -50,27 +50,27 @@
     <div class="menu">
         <ul class="menu-list">
             {% if not is_authenticated %}
-            <li class="menu-item">
-                <i class="bi bi-person-fill"></i>
-                <p><a href="#">Login/Sign up</a></p>
-            </li>
+                <li class="menu-item">
+                    <i class="bi bi-person-fill"></i>
+                    <p><a href="#">Login/Sign up</a></p>
+                </li>
             {% else %}
-            <li class="menu-item">
-                <i class="bi bi-person-fill"></i>
-                <p><a href="#">Your Feed</a></p>
-            </li>
-            <li class="menu-item">
-                <i class="bi bi-journal-bookmark-fill"></i>
-                <p><a href="#">Read Later</a></p>
-            </li>
-            <li class="menu-item">
-                <i class="bi bi-clock-history"></i>
-                <p><a href="#">History</a></p>
-            </li>
-            <li class="menu-item">
-                <i class="bi bi-box-arrow-right"></i>
-                <p><a href="#">Sign Out</a></p>
-            </li>
+                <li class="menu-item">
+                    <i class="bi bi-person-fill"></i>
+                    <p><a href="#">Your Feed</a></p>
+                </li>
+                <li class="menu-item">
+                    <i class="bi bi-journal-bookmark-fill"></i>
+                    <p><a href="#">Read Later</a></p>
+                </li>
+                <li class="menu-item">
+                    <i class="bi bi-clock-history"></i>
+                    <p><a href="#">History</a></p>
+                </li>
+                <li class="menu-item">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <p><a href="#">Sign Out</a></p>
+                </li>
             {% endif %}
         </ul>
     </div>
