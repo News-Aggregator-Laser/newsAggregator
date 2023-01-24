@@ -9,10 +9,10 @@ from news.models import ReadLater, History
 class ReadLaterSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReadLater
-        fields = '__all__'
+        fields = ['news']
 
 
 class HistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = History
-        fields = '__all__'
+        fields = ['news']

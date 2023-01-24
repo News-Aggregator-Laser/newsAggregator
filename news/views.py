@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import *
+from django.db.models import Count, Case, When, IntegerField, F
 
 
 # Create your views here.
@@ -36,6 +37,12 @@ def home(request):
         for category in common_vars["selected_categories"]
     }
     popular_news = News.objects.all().order_by("-publish_date")[:10]
+    for article in popular_news:
+        try:
+            readlater = ReadLater.objects.get(user=request.user, news=article)
+            article.readLater = not readlater.is_removed
+        except ReadLater.DoesNotExist:
+            article.readLater = False
     return render(
         request,
         "index.html",
@@ -49,15 +56,20 @@ def home(request):
 
 
 def category(request, category: str):
+    category_news = News.objects.filter(news_category=Category.objects.get(name=category))[:20]
+    for article in category_news:
+        try:
+            readlater = ReadLater.objects.get(user=request.user, news=article)
+            article.readLater = not readlater.is_removed
+        except ReadLater.DoesNotExist:
+            article.readLater = False
     return render(
         request,
         "category_news.html",
         {
             **_common_vars(),
             "category": category,
-            "category_news": News.objects.filter(
-                news_category=Category.objects.get(name=category)
-            ),
+            "category_news": category_news,
         },
     )
 
