@@ -1,15 +1,13 @@
-<div>
-    <button class = "cbtn"> category</button>
-<h1>{{ article.title }}</h1>
-<h2 > {{ article.sub_title }}/ description </h2>
-{{ article.author}}- {{ article.published_at}}
-<br><br>
-<div class = "divimg"> <img  src="{{ article.image_url }}" alt="{{ article.title }}"></div>
-
-<div> <br><br>
-    {{ article.content}}
- <br>article content - article content -article content -article content -article content
- <br>article content - article content -article content -article content -article content
- <br> <br> source :{{ article.provider}}
-</div>
+<div class="article-view-cont">
+    <div class="category">
+        <p>{{ article.news_category }}</p>
+    </div>
+    <h1>{{ article.title }}</h1>
+    <h3> {{ article.subtitle }} </h3>
+    <p>{{ article.news_author}} - {{ article.publish_date}}</p>
+    <img src="{{ article.url_image }}" alt="{{ article.title }}">
+    <div>
+        {{ article.content }}
+        source: <a href="{{ article.source}}">{{ article.news_source }}</a>
+    </div>
 </div>

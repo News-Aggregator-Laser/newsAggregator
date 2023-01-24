@@ -21,8 +21,8 @@ def _common_vars() -> dict:
             "description": CMS.objects.first().footer_description,
             "facebook": CMS.objects.first().facebook_url,
             "instagram": CMS.objects.first().instagram_url,
-            "twitter": CMS.objects.first().twitter_url
-        }
+            "twitter": CMS.objects.first().twitter_url,
+        },
     }
 
 
@@ -58,5 +58,16 @@ def category(request, category: str):
             "category_news": News.objects.filter(
                 news_category=Category.objects.get(name=category)
             ),
+        },
+    )
+
+
+def article(request, article_id: int):
+    return render(
+        request,
+        "article_details.html",
+        {
+            **_common_vars(),
+            "article": News.objects.get(id=article_id),
         },
     )

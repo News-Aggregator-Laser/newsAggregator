@@ -1,13 +1,15 @@
 <div class="article-container">
     <div class="article">
         <div class="article-info-cont">
-            <h3><a href="#">{{ article.title|truncatechars:100 }}</a></h3>
+            <h3><a href="/article/{{ article.id }}">{{ article.title|truncatechars:100 }}</a></h3>
             <p>{{ article.subtitle|truncatechars:150 }}</p>
             <br>
         </div>
         <div class="article-img-cont">
             <img src="{{ article.url_image }}" alt="{{ article.title }}">
-            <i class="bi bi-bookmark read-later-btn"></i>
+            <i class="bi bi-bookmark read-later-btn">
+                <span class="read-later-tooltip">Add To Read-Later</span>
+            </i>
         </div>
     </div>
     <div class="article-end-line"></div>
