@@ -671,3 +671,60 @@ footer .category a {
     width: 100px;
     height: 100px;
 }
+/*============= comment =============*/
+   .comment_area ol:empty:after {
+        content: "No comment has been posted yet.";
+        text-align: center;
+        color: var(--gray);
+        font-style: italic;
+    }
+
+    .comment-content{
+    display:flex;
+    }
+    .contact-form-area .form-control {
+    position: relative;
+    z-index: 2;
+    height: 54px;
+    width: 70%;
+    background-color: #f0f4f8;
+    font-size: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 0;
+    padding: 15px 30px;
+    font-weight: 500;
+    color: #aeaeae;
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms;
+    height: 250px;
+}
+
+.btn {
+    background-color: black;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    min-width: 170px;
+    height: 54px;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 0 30px;
+    font-size: 18px;
+    line-height: 54px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.btn1{
+    background-color: black;
+    width:120px;
+    height: 54px;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 0 30px;
+    font-size: 18px;
+    line-height: 54px;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin:20px;
+}
