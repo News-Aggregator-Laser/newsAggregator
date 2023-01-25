@@ -25,7 +25,7 @@ readLaterButtons.forEach(button => {
         })
             .then(response => {
                 // if request is successful (action is performed)
-                if (response.status == 201) {
+                if (response.ok) {
                     button.classList.toggle('bi-bookmark');
                     button.classList.toggle('bi-bookmark-fill');
                 }
