@@ -105,7 +105,7 @@ def read_later(request):
 
 
 def history(request):
-    history = History.objects.filter(user=request.user).values_list(
+    history = History.objects.filter(user=request.user, is_removed=False).values_list(
         "news_id", flat=True
     )
     history_news = News.objects.filter(id__in=history)
