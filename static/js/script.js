@@ -1,6 +1,4 @@
 // ========== Main search section ========== //
-
-
 function toggleSearch() {
     const searchCont = document.querySelector(".search-cont");
     if (searchCont.style.display === 'none') {

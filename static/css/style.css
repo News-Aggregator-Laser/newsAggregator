@@ -285,7 +285,8 @@ header .logo-cont {
     object-fit: fill;
 }
 
-.article .read-later-btn {
+.article .read-later-btn,
+.history-remove-btn {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 5px;
     border-radius: 7px;
@@ -298,12 +299,14 @@ header .logo-cont {
     transition: all 0.3s ease;
 }
 
-.article .read-later-btn:hover {
+.article .read-later-btn:hover,
+.history-remove-btn:hover {
     transform: scale(1.1);
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-.article .read-later-tooltip {
+.article .read-later-tooltip,
+.history-remove-tooltip {
     visibility: hidden;
     width: 0px;
     background-color: rgba(0, 0, 0, 0.7);
@@ -311,12 +314,17 @@ header .logo-cont {
     padding: 5px;
     border-radius: 5px;
     position: absolute;
-    top: 100%;
+    right: 100%;
     font-size: 0.7rem;
 
 }
 
 .article .read-later-btn:hover .read-later-tooltip {
+    visibility: visible;
+    width: max-content;
+}
+
+.article .history-remove-btn:hover .history-remove-tooltip {
     visibility: visible;
     width: max-content;
 }

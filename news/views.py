@@ -27,6 +27,16 @@ def _common_vars() -> dict:
     }
 
 
+def _add_read_later_to_news(news, user):
+    for article in news:
+        try:
+            readlater = ReadLater.objects.get(user=user, news=article)
+            article.readLater = not readlater.is_removed
+        except ReadLater.DoesNotExist:
+            article.readLater = False
+    return news
+
+
 def home(request):
     common_vars = _common_vars()
     # top news (for main slider)
@@ -37,12 +47,7 @@ def home(request):
         for category in common_vars["selected_categories"]
     }
     popular_news = News.objects.all().order_by("-publish_date")[:10]
-    for article in popular_news:
-        try:
-            readlater = ReadLater.objects.get(user=request.user, news=article)
-            article.readLater = not readlater.is_removed
-        except ReadLater.DoesNotExist:
-            article.readLater = False
+    popular_news = _add_read_later_to_news(popular_news, request.user)
     return render(
         request,
         "index.html",
@@ -56,13 +61,10 @@ def home(request):
 
 
 def category(request, category: str):
-    category_news = News.objects.filter(news_category=Category.objects.get(name=category))[:20]
-    for article in category_news:
-        try:
-            readlater = ReadLater.objects.get(user=request.user, news=article)
-            article.readLater = not readlater.is_removed
-        except ReadLater.DoesNotExist:
-            article.readLater = False
+    category_news = News.objects.filter(
+        news_category=Category.objects.get(name=category)
+    )[:20]
+    category_news = _add_read_later_to_news(category_news, request.user)
     return render(
         request,
         "category_news.html",
@@ -81,5 +83,38 @@ def article(request, article_id: int):
         {
             **_common_vars(),
             "article": News.objects.get(id=article_id),
+        },
+    )
+
+
+def read_later(request):
+    read_later = ReadLater.objects.filter(
+        user=request.user, is_removed=False
+    ).values_list("news_id", flat=True)
+    read_later_news = News.objects.filter(id__in=read_later)
+    for article in read_later_news:
+        article.readLater = True
+    return render(
+        request,
+        "read_later.html",
+        {
+            **_common_vars(),
+            "read_later_news": read_later_news,
+        },
+    )
+
+
+def history(request):
+    history = History.objects.filter(user=request.user).values_list(
+        "news_id", flat=True
+    )
+    history_news = News.objects.filter(id__in=history)
+    history_news = _add_read_later_to_news(history_news, request.user)
+    return render(
+        request,
+        "history.html",
+        {
+            **_common_vars(),
+            "history_news": history_news,
         },
     )
