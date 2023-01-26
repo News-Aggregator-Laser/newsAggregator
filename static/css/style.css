@@ -318,12 +318,52 @@ header .logo-cont {
     font-size: 0.7rem;
 
 }
-
-.article .read-later-btn:hover .read-later-tooltip {
+/*============= ana najah zdton ok 00=============*/
+.flex-container {
+  display: flex;
+}
+.article .favorite-btn:hover .read-later-tooltip {
     visibility: visible;
     width: max-content;
 }
+.article .favorite-btn,
+.history-remove-btn {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 7px;
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
+.article .favorite-btn:hover,
+.history-remove-btn:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.article .favorite-tooltip,
+.history-remove-tooltip {
+    visibility: hidden;
+    width: 0px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    right: 100%;
+    font-size: 0.7rem;
+
+}
+/*============= end najah zdton ok 00=============*/
+.article .favorite-btn:hover .read-later-tooltip {
+    visibility: visible;
+    width: max-content;
+}
 .article .history-remove-btn:hover .history-remove-tooltip {
     visibility: visible;
     width: max-content;
@@ -721,7 +761,7 @@ footer .category a {
     height: 54px;
     color: #ffffff;
     border-radius: 10px;
-    padding: 0 30px;
+    align-items: center;
     font-size: 18px;
     line-height: 54px;
     font-weight: 600;
