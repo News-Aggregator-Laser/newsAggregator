@@ -113,16 +113,16 @@ class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+class Subscription(models.Model):
+    email = models.EmailField()
+    is_subscribed = models.BooleanField(default=True)
+
 # class NewsSource(models.Model):
 #     name = models.CharField(max_length=20, null=True)
 #     is_active = models.BooleanField(default=False)
 #
 #
-# class Subscription(models.Model):
-#     email = models.EmailField()
-#     is_subscribed = models.BooleanField(default=True)
-#
-
 # class Author(models.Model):
 #     name = models.CharField(max_length=200, null=True)
 #     is_active = models.BooleanField(default=False)
