@@ -285,8 +285,10 @@ header .logo-cont {
     object-fit: fill;
 }
 
-.article .read-later-btn,
-.history-remove-btn {
+/* interaction buttons base style*/
+.read-later-btn,
+.history-remove-btn,
+.favorite-btn {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 5px;
     border-radius: 7px;
@@ -299,76 +301,48 @@ header .logo-cont {
     transition: all 0.3s ease;
 }
 
+/* interaction buttons hover style*/
 .article .read-later-btn:hover,
-.history-remove-btn:hover {
+.history-remove-btn:hover,
+.favorite-btn:hover {
     transform: scale(1.1);
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-.article .read-later-tooltip,
-.history-remove-tooltip {
+/* tooltip style*/
+.article .interaction-btn-tooltip {
     visibility: hidden;
     width: 0px;
     background-color: rgba(0, 0, 0, 0.7);
     color: #fff;
     padding: 5px;
-    border-radius: 5px;
+    border-radius: 5px 0px 5px 5px;
     position: absolute;
-    right: 100%;
+    top: 100%;
+    right: 75%;
     font-size: 0.7rem;
-
 }
+
+/* override some styles for history-remove-tooltip */
+.history-remove-tooltip {
+    top: 10% !important;
+    right: 100% !important;
+    border-radius: 5px !important;
+}
+
+/* Show the tooltip on hover */
+.article .read-later-btn:hover .interaction-btn-tooltip,
+.article .favorite-btn:hover .interaction-btn-tooltip,
+.article .history-remove-btn:hover .interaction-btn-tooltip {
+    visibility: visible;
+    width: max-content;
+}
+
+
 /*============= ana najah zdton ok 00=============*/
 .flex-container {
-  display: flex;
+    display: flex;
 }
-.article .favorite-btn:hover .read-later-tooltip {
-    visibility: visible;
-    width: max-content;
-}
-.article .favorite-btn,
-.history-remove-btn {
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 5px;
-    border-radius: 7px;
-    font-size: 1.2rem;
-    color: var(--accent-color);
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.article .favorite-btn:hover,
-.history-remove-btn:hover {
-    transform: scale(1.1);
-    background-color: rgba(0, 0, 0, 0.7);
-}
-
-.article .favorite-tooltip,
-.history-remove-tooltip {
-    visibility: hidden;
-    width: 0px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 5px;
-    border-radius: 5px;
-    position: absolute;
-    right: 100%;
-    font-size: 0.7rem;
-
-}
-/*============= end najah zdton ok 00=============*/
-.article .favorite-btn:hover .read-later-tooltip {
-    visibility: visible;
-    width: max-content;
-}
-.article .history-remove-btn:hover .history-remove-tooltip {
-    visibility: visible;
-    width: max-content;
-}
-
 
 /*============= Articles Section =============*/
 .articles-section {
@@ -711,18 +685,20 @@ footer .category a {
     width: 100px;
     height: 100px;
 }
-/*============= comment =============*/
-   .comment_area ol:empty:after {
-        content: "No comment has been posted yet.";
-        text-align: center;
-        color: var(--gray);
-        font-style: italic;
-    }
 
-    .comment-content{
-    display:flex;
-    }
-    .contact-form-area .form-control {
+/*============= comment =============*/
+.comment_area ol:empty:after {
+    content: "No comment has been posted yet.";
+    text-align: center;
+    color: var(--gray);
+    font-style: italic;
+}
+
+.comment-content {
+    display: flex;
+}
+
+.contact-form-area .form-control {
     position: relative;
     z-index: 2;
     height: 54px;
@@ -755,9 +731,10 @@ footer .category a {
     font-weight: 600;
     text-transform: capitalize;
 }
-.btn1{
+
+.btn1 {
     background-color: black;
-    width:120px;
+    width: 120px;
     height: 54px;
     color: #ffffff;
     border-radius: 10px;
@@ -766,5 +743,5 @@ footer .category a {
     line-height: 54px;
     font-weight: 600;
     text-transform: capitalize;
-    margin:20px;
+    margin: 20px;
 }
