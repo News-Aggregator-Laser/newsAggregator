@@ -65,7 +65,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 ROOT_URLCONF = 'newsAggregator.urls'
 
 TEMPLATES = [
@@ -86,6 +88,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'newsAggregator.wsgi.application'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

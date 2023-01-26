@@ -1,12 +1,22 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from .models import *
-from django.db.models import Count, Case, When, IntegerField, F
+
+
+def authenticated_required(function=None, redirect_url='login'):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_authenticated,
+        login_url=redirect_url
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
 
 
 # Create your views here.
-def _common_vars() -> dict:
+def _common_vars(is_anonymous) -> dict:
     return {
-        "is_authenticated": True,
+        "is_authenticated": not is_anonymous,
         "selected_categories": [
             CMS.objects.first().category1,
             CMS.objects.first().category2,
@@ -38,7 +48,7 @@ def _add_read_later_to_news(news, user):
 
 
 def home(request):
-    common_vars = _common_vars()
+    common_vars = _common_vars(request.user.is_anonymous)
     # top news (for main slider)
     top_news = News.objects.all().order_by("-publish_date")[:10]
     # top news in each selected category
@@ -71,7 +81,7 @@ def category(request, category: str):
         request,
         "category_news.html",
         {
-            **_common_vars(),
+            **_common_vars(request.user.is_anonymous),
             "category": category,
             "category_news": category_news,
         },
@@ -83,15 +93,14 @@ def article(request, article_id: int):
         request,
         "article_details.html",
         {
-            **_common_vars(),
+            **_common_vars(request.user.is_anonymous),
             "article": News.objects.get(id=article_id),
         },
     )
 
 
+@authenticated_required
 def read_later(request):
-    if request.user.is_anonymous:
-        redirect('login')
     read_later = ReadLater.objects.filter(
         user=request.user, is_removed=False
     ).values_list("news_id", flat=True)
@@ -102,15 +111,14 @@ def read_later(request):
         request,
         "read_later.html",
         {
-            **_common_vars(),
+            **_common_vars(request.user.is_anonymous),
             "read_later_news": read_later_news,
         },
     )
 
 
+@authenticated_required
 def history(request):
-    if request.user.is_anonymous:
-        redirect('login')
     history = History.objects.filter(user=request.user, is_removed=False).values_list(
         "news_id", flat=True
     )
@@ -120,7 +128,7 @@ def history(request):
         request,
         "history.html",
         {
-            **_common_vars(),
+            **_common_vars(request.user.is_anonymous),
             "history_news": history_news,
         },
     )
