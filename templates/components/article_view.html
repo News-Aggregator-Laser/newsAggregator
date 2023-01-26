@@ -10,7 +10,79 @@
         {{ article.content }}
         source: <a href="{{ article.source }}">{{ article.news_source }}</a>
     </div>
+    <button class ="btn1"><span class="bi bi-share"></span>  share</button>
+    <!-- Comment Area Start -->
+                <div style="margin-top:30px" class="">
+                    <h1 style="margin-button:30px;">Comments</h1>
+
+                    <ol>
+                        {% for comment in comments %}
+                        <!-- Single Comment Area -->
+                        <li class="">
+                            <!-- Comment Content -->
+                            <div class="comment-content">
+                                <!-- Comment Author -->
+                                <div class="comment-author">
+                                    <img src="" alt="{{comment.name}}">
+                                </div>
+                                <!-- Comment Meta -->
+                                <div class="comment-meta">
+                                    <div style="display:flex">
+                                        <a href="mailto:{{comment.email}}" target="_blank" class="post-author">{{comment.name}}</a>
+                                        <a href="#" class="post-date">{{comment.date_created|date:"M d, Y"}} </a>
+                                        {% if user.is_superuser %}
+                                        <a href="javascript:void(0)" data-url="{% url 'delete-comment' comment.id %}" class="">Delete Comment</a>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                    <p>{{comment.message}}</p>
+                                        </div>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+
+                <div style ="margin-button:30;" >
+                    <h1 style ="margin-button:30;" >Leave a Comment</h1>
+
+                    <!-- Reply Form -->
+                    <div class="contact-form-area">
+                        <form action="" id="comment-form" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="">
+                            <input type="hidden" name="post" value="{{post.id}}">
+                            <div class="row">
+                                {% if not user.id %}
+                                <div class="">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Name*">
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email*">
+                                </div>
+                                {% else %}
+                                <input type="hidden" name="name" value="{{user.first_name}} {{user.last_name}}">
+                                <input type="hidden" name="email" value="{{user.email}}"> {% endif %}
+                                <div class="">
+                                    <textarea name="message" class="form-control" id="message" name="message" cols="30" rows="10" placeholder="Message"></textarea>
+                                </div>
+                                <div class="">
+                                    <button  style ="margin-top:30"  class="btn" type="submit">Submit Comment</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 </div>
+<!-- class Comment(models.Model):
+    news = models.ForeignKey(news, on_delete=models.CASCADE,default="")
+    name = models.CharField(max_length=250)
+    email = models.CharField(max_length=250)
+    message = models.TextField()
+    date_created = models.DateTimeField(default=timezone.now)
+ -->
 <script>
     const data = {'news': {{ article.id }},};
     fetch(`/history/`, {
