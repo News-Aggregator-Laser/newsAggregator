@@ -1,6 +1,6 @@
 const readLaterButtons = document.querySelectorAll('.read-later-btn');
 readLaterButtons.forEach(button => {
-    button.addEventListener('click', event => {
+    button.addEventListener('click', () => {
         const postId = button.getAttribute('data-post-id');
         let url, body, method;
         // add to read-later

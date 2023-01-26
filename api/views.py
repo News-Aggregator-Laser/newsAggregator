@@ -2,11 +2,11 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from api.serializers import ReadLaterSerializer, HistorySerializer, LikeSerializer, CommentSerializer
-from news.models import ReadLater, History, Like, Comment
+from api.serializers import ReadLaterSerializer, HistorySerializer, LikeSerializer, CommentSerializer, SubscriptionSerializer
+from news.models import ReadLater, History, Like, Comment, Subscription
 
 # Create your views here.
 from rest_framework import viewsets
@@ -78,3 +78,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(user=request.user)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class SubscriptionViewSet(viewsets.ModelViewSet):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+    permission_classes = [AllowAny]

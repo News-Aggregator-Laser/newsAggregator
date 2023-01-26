@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from news.models import ReadLater, History, Like, Comment
+from news.models import ReadLater, History, Like, Comment, Subscription
 
 
 #  HyperlinkedModelSerializer
@@ -28,3 +28,9 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['news', 'content']
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = ['email']

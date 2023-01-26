@@ -36,6 +36,10 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'news', 'content', 'created_at']
 
 
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'email', 'is_subscribed']
+
+
 admin.site.register(Provider, ProviderAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(News, NewsAdmin)
@@ -44,5 +48,6 @@ admin.site.register(ReadLater, ReadLaterAdmin)
 admin.site.register(CMS, CMSAdmin)
 admin.site.register(Like, LikeAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Subscription, SubscriptionAdmin)
 # admin.site.register(Author)
 # admin.site.register(NewsSource)
