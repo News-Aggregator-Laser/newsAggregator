@@ -58,5 +58,7 @@ class HistoryViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         news_id = kwargs.get("pk")
-        History.objects.filter(user=request.user, news=news_id).delete()
+        History.objects.filter(user=request.user, news=news_id).update(
+            is_removed=True
+        )
         return Response(status=status.HTTP_201_CREATED)
