@@ -100,6 +100,19 @@ class CMS(models.Model):
     def __str__(self) -> str:
         return f"CMS {self.id}"
 
+
+class Comment(models.Model):
+    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Like(models.Model):
+    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 # class NewsSource(models.Model):
 #     name = models.CharField(max_length=20, null=True)
 #     is_active = models.BooleanField(default=False)
@@ -109,20 +122,7 @@ class CMS(models.Model):
 #     email = models.EmailField()
 #     is_subscribed = models.BooleanField(default=True)
 #
-#
-# class Comment(models.Model):
-#     news = models.ForeignKey(News, on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     content = models.TextField()
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#
-# class Like(models.Model):
-#     news = models.ForeignKey(News, on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#
+
 # class Author(models.Model):
 #     name = models.CharField(max_length=200, null=True)
 #     is_active = models.BooleanField(default=False)

@@ -1,12 +1,22 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render, redirect
 from .models import *
-from django.db.models import Count, Case, When, IntegerField, F
+
+
+def authenticated_required(function=None, redirect_url='login'):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_authenticated,
+        login_url=redirect_url
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
 
 
 # Create your views here.
-def _common_vars() -> dict:
+def _common_vars(is_anonymous) -> dict:
     return {
-        "is_authenticated": True,
+        "is_authenticated": not is_anonymous,
         "selected_categories": [
             CMS.objects.first().category1,
             CMS.objects.first().category2,
@@ -38,7 +48,7 @@ def _add_read_later_to_news(news, user):
 
 
 def home(request):
-    common_vars = _common_vars()
+    common_vars = _common_vars(request.user.is_anonymous)
     # top news (for main slider)
     top_news = News.objects.all().order_by("-publish_date")[:10]
     # top news in each selected category
@@ -47,7 +57,8 @@ def home(request):
         for category in common_vars["selected_categories"]
     }
     popular_news = News.objects.all().order_by("-publish_date")[:10]
-    popular_news = _add_read_later_to_news(popular_news, request.user)
+    if not request.user.is_anonymous:
+        popular_news = _add_read_later_to_news(popular_news, request.user)
     return render(
         request,
         "index.html",
@@ -64,12 +75,13 @@ def category(request, category: str):
     category_news = News.objects.filter(
         news_category=Category.objects.get(name=category)
     )[:20]
-    category_news = _add_read_later_to_news(category_news, request.user)
+    if not request.user.is_anonymous:
+        category_news = _add_read_later_to_news(category_news, request.user)
     return render(
         request,
         "category_news.html",
         {
-            **_common_vars(),
+            **_common_vars(request.user.is_anonymous),
             "category": category,
             "category_news": category_news,
         },
@@ -81,12 +93,13 @@ def article(request, article_id: int):
         request,
         "article_details.html",
         {
-            **_common_vars(),
+            **_common_vars(request.user.is_anonymous),
             "article": News.objects.get(id=article_id),
         },
     )
 
 
+@authenticated_required
 def read_later(request):
     read_later = ReadLater.objects.filter(
         user=request.user, is_removed=False
@@ -98,12 +111,13 @@ def read_later(request):
         request,
         "read_later.html",
         {
-            **_common_vars(),
+            **_common_vars(request.user.is_anonymous),
             "read_later_news": read_later_news,
         },
     )
 
 
+@authenticated_required
 def history(request):
     history = History.objects.filter(user=request.user, is_removed=False).values_list(
         "news_id", flat=True
@@ -114,7 +128,7 @@ def history(request):
         request,
         "history.html",
         {
-            **_common_vars(),
+            **_common_vars(request.user.is_anonymous),
             "history_news": history_news,
         },
     )
