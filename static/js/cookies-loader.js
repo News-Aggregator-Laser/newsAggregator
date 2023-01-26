@@ -15,4 +15,3 @@ function getCookie(name) {
 }
 
 let csrftoken = getCookie('csrftoken');
-console.log(csrftoken)

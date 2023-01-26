@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 from django.db.models import Count, Case, When, IntegerField, F
 
@@ -47,7 +47,8 @@ def home(request):
         for category in common_vars["selected_categories"]
     }
     popular_news = News.objects.all().order_by("-publish_date")[:10]
-    popular_news = _add_read_later_to_news(popular_news, request.user)
+    if not request.user.is_anonymous:
+        popular_news = _add_read_later_to_news(popular_news, request.user)
     return render(
         request,
         "index.html",
@@ -64,7 +65,8 @@ def category(request, category: str):
     category_news = News.objects.filter(
         news_category=Category.objects.get(name=category)
     )[:20]
-    category_news = _add_read_later_to_news(category_news, request.user)
+    if not request.user.is_anonymous:
+        category_news = _add_read_later_to_news(category_news, request.user)
     return render(
         request,
         "category_news.html",
@@ -88,6 +90,8 @@ def article(request, article_id: int):
 
 
 def read_later(request):
+    if request.user.is_anonymous:
+        redirect('login')
     read_later = ReadLater.objects.filter(
         user=request.user, is_removed=False
     ).values_list("news_id", flat=True)
@@ -105,6 +109,8 @@ def read_later(request):
 
 
 def history(request):
+    if request.user.is_anonymous:
+        redirect('login')
     history = History.objects.filter(user=request.user, is_removed=False).values_list(
         "news_id", flat=True
     )
