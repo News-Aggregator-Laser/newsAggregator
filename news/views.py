@@ -2,18 +2,19 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from .models import *
 
+from json import dumps
 
-def authenticated_required(function=None, redirect_url='login'):
+
+def authenticated_required(function=None, redirect_url="login"):
     actual_decorator = user_passes_test(
-        lambda u: u.is_authenticated,
-        login_url=redirect_url
+        lambda u: u.is_authenticated, login_url=redirect_url
     )
     if function:
         return actual_decorator(function)
     return actual_decorator
 
 
-# Create your views here.
+# ==================== Helpers ====================#
 def _common_vars(is_anonymous) -> dict:
     return {
         "is_authenticated": not is_anonymous,
@@ -47,6 +48,28 @@ def _add_read_later_to_news(news, user):
     return news
 
 
+def _encode_article(article: News) -> dict:
+    """encode article to dict (to be compatible with JSON serialize)"""
+    return {
+        "id": article.id,
+        "title": article.title,
+        "subtitle": article.subtitle,
+        "content": article.content,
+        "publish_date": str(article.publish_date),
+        "url_image": article.url_image,
+        "news_category": article.news_category.name,
+        "news_author": article.news_author,
+        "readLater": article.readLater if article.readLater else False,
+        "favorite": False,  #! change when favorite is implemented
+    }
+
+
+def _news_to_json(news) -> str:
+    """encode the list of news to json (to parse it in client side)"""
+    return dumps([_encode_article(article) for article in set(news)])
+
+
+# ==================== End Points ====================#
 def home(request):
     common_vars = _common_vars(request.user.is_anonymous)
     # top news (for main slider)
@@ -83,7 +106,7 @@ def category(request, category: str):
         {
             **_common_vars(request.user.is_anonymous),
             "category": category,
-            "category_news": category_news,
+            "news": _news_to_json(category_news),
         },
     )
 
@@ -112,7 +135,7 @@ def read_later(request):
         "read_later.html",
         {
             **_common_vars(request.user.is_anonymous),
-            "read_later_news": read_later_news,
+            "news": _news_to_json(read_later_news),
         },
     )
 
@@ -129,6 +152,6 @@ def history(request):
         "history.html",
         {
             **_common_vars(request.user.is_anonymous),
-            "history_news": history_news,
+            "news": _news_to_json(history_news),
         },
     )
