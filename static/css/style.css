@@ -364,7 +364,7 @@ header .logo-cont {
 }
 
 
-/*============= Articles View Section =============*/
+/*============= Articles View Section (component )=============*/
 .articles-display-section {
     margin-top: 6vh;
     position: relative;
@@ -395,10 +395,42 @@ header .logo-cont {
     display: flex;
     align-items: center;
     gap: 15px;
+    position: relative;
 }
 
 .articles-display-section .articles-display-btns i {
     font-size: 1.2rem;
+}
+
+.client-search-input {
+    background-color: var(--accent-color);
+    width: 280px;
+    display: none;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 5px 5px 5px 10px;
+    border: none;
+    border-radius: 7px;
+    outline: none;
+}
+
+.client-filter-box {
+    width: max-content;
+    display: none;
+    height: 100px;
+    border-radius: 10px;
+    background-color: var(--accent-color);
+    position: absolute;
+    top: 70%;
+    right: 10px;
+    z-index: 5;
+    padding: 10px;
+}
+
+.client-filter-box form {
+    width: 100%;
+    display: flex;
+    gap: 10px;
 }
 
 
