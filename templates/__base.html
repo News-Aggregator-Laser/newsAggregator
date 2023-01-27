@@ -24,6 +24,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <!--scripts js-->
     <script defer src="{% static 'js/script.js' %}"></script>
+    <script defer src="{% static 'js/articles-manager.js' %}"></script>
     <!--read-later js script-->
     <script defer src="{% static 'js/read-later-endpoints.js' %}"></script>
     <!--history js script-->
@@ -38,7 +39,17 @@
 </head>
 
 <body>
+    <!--cookies js script-->
     <script src="{% static 'js/cookies-loader.js' %}"></script>
+
+    <!--handle news variable and make in Global -->
+    <script>
+        {% if news %}
+        console.log("OKK");
+        var articles = JSON.parse('{{ news|escapejs }}');
+        {% endif %}
+    </script>
+
     <!-- Header -->
     {% include "components/header.html" %}
     <!-- Content-->

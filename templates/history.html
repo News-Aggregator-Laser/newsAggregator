@@ -14,14 +14,8 @@
             <div><i class="bi bi-funnel-fill"></i></div>
         </div>
     </div>
-    <div class="articles-section">
-        {% if history_news %}
-        {% for article in history_news %}
-        {% include "components/history_article.html" %}
-        {% endfor %}
-        {% else %}
-        <h3>You have nothing in your History list.</h3>
-        {% endif %}
+    <div class="articles-section history-dynamic-article-section">
+        <!-- content will be renderd from articles-manager.js -->
     </div>
 </section>
 

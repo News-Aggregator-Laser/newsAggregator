@@ -4,8 +4,6 @@
 
 {% block content %}
 
-{% if is_authenticated %}
-
 <section class="articles-display-section">
     <div class="articles-display-top">
         <h1>Read Later</h1>
@@ -14,21 +12,9 @@
             <div><i class="bi bi-funnel-fill"></i></div>
         </div>
     </div>
-    <div class="articles-section">
-        {% if read_later_news %}
-        {% for article in read_later_news %}
-        {% include "components/article.html" %}
-        {% endfor %}
-        {% else %}
-        <h3>You have nothing in your Read-Later list.</h3>
-        {% endif %}
+    <div class="articles-section dynamic-article-section">
+        <!-- content will be renderd from articles-manager.js -->
     </div>
 </section>
 
-{% else %}
-<section style="width: 100%; height: 100%; display: grid; place-items: center;">
-    <h2>You Are Not Authorized...</h2>
-</section>
-
-{% endif %}
 {% endblock %}
