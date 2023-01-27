@@ -84,3 +84,10 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
     permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        subscription = Subscription.objects.filter(email=request.data["email"]).update(is_subscribed=True)
+        if not subscription:
+            subscription = Subscription.objects.create(email=request.data["email"])
+            subscription.save()
+        return Response(status=status.HTTP_201_CREATED)
