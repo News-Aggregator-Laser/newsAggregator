@@ -82,8 +82,55 @@ function render_news(articles) {
     }
 }
 
+
+// ==================== Search ==================== //
+const search_btn = document.querySelector(".client-search-btn");
+const search_input = document.querySelector(".client-search-input");
+
+function toggleSearch() {
+    if (search_input.style.display === 'none') {
+        search_input.style.display = 'block';
+    } else {
+        search_input.style.display = 'none';
+    }
+}
+
+function searchInNews() {
+    console.log("searching...");
+    let search_query = search_input.value.toLowerCase();
+    let filtered_articles = articles.filter((article) => {
+        return article.title.toLowerCase().includes(search_query) ||
+            article.subtitle.toLowerCase().includes(search_query) ||
+            article.content.toLowerCase().includes(search_query);
+    });
+    render_news(filtered_articles);
+}
+
+// --- Search Event Listeners ---//
+search_btn.addEventListener("click", () => { toggleSearch(); });
+search_input.addEventListener("keyup", (e) => { searchInNews(); });
+
+
+// ==================== Filter ==================== //
+const filter_btn = document.querySelector(".client-filter-btn");
+const filter_box = document.querySelector(".client-filter-box");
+
+function toggleFilter() {
+    if (filter_box.style.display === 'none') {
+        filter_box.style.display = 'block';
+    } else {
+        filter_box.style.display = 'none';
+    }
+}
+
+// --- Filter Event Listeners ---//
+filter_btn.addEventListener("click", () => { toggleFilter(); });
+
+
 // ==================== Run ==================== //
 if (_articles_container || _history_articles_container) {
     console.log(articles);
+    toggleSearch();
+    toggleFilter();
     render_news(articles);
 }

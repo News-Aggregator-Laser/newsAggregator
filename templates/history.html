@@ -4,25 +4,8 @@
 
 {% block content %}
 
-{% if is_authenticated %}
+{% with title="History" %}
+{% include "components/dynamic-articles-section.html" %}
+{% endwith %}
 
-<section class="articles-display-section">
-    <div class="articles-display-top">
-        <h1>History</h1>
-        <div class="articles-display-btns">
-            <div><i class="bi bi-search"></i></div>
-            <div><i class="bi bi-funnel-fill"></i></div>
-        </div>
-    </div>
-    <div class="articles-section history-dynamic-article-section">
-        <!-- content will be renderd from articles-manager.js -->
-    </div>
-</section>
-
-{% else %}
-<section style="width: 100%; height: 100%; display: grid; place-items: center;">
-    <h2>You Are Not Authorized...</h2>
-</section>
-
-{% endif %}
 {% endblock %}

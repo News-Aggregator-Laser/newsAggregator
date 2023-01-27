@@ -4,17 +4,8 @@
 
 {% block content %}
 
-<section class="articles-display-section">
-    <div class="articles-display-top">
-        <h1>Read Later</h1>
-        <div class="articles-display-btns">
-            <div><i class="bi bi-search"></i></div>
-            <div><i class="bi bi-funnel-fill"></i></div>
-        </div>
-    </div>
-    <div class="articles-section dynamic-article-section">
-        <!-- content will be renderd from articles-manager.js -->
-    </div>
-</section>
+{% with title="Read-Later" %}
+{% include "components/dynamic-articles-section.html" %}
+{% endwith %}
 
 {% endblock %}
