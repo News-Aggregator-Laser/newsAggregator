@@ -10,3 +10,5 @@ jsonpath_ng
 schedule==1.1.0
 django-jazzmin
 djangorestframework
+pandas
+scikit-learn

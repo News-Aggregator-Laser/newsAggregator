@@ -1,6 +1,6 @@
 const removeFromHistoryButtons = document.querySelectorAll('.history-remove-btn');
 removeFromHistoryButtons.forEach(button => {
-    button.addEventListener('click', event => {
+    button.addEventListener('click', () => {
         const postId = button.getAttribute('data-post-id');
         // Send the request
         fetch(`/history/${postId}`, {

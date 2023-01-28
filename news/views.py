@@ -1,8 +1,12 @@
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import render
 from .models import *
-
 from json import dumps
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from datetime import datetime, timedelta
 
 
 def authenticated_required(function=None, redirect_url="login"):
@@ -60,7 +64,7 @@ def _encode_article(article: News) -> dict:
         "news_category": article.news_category.name,
         "news_author": article.news_author,
         "readLater": article.readLater if article.readLater else False,
-        "favorite": False,  #! change when favorite is implemented
+        "favorite": False,  # ! change when favorite is implemented
     }
 
 
@@ -155,3 +159,25 @@ def history(request):
             "news": _news_to_json(history_news),
         },
     )
+
+
+def your_feed(request):
+    # Load the data
+    # df = pd.read_csv('news_data.csv')
+    ten_days_ago = datetime.now() - timedelta(days=1000)
+    # filter(publish_date__gt=ten_days_ago)
+    news_data = News.objects.all().values('id', 'title', 'subtitle', 'content', 'news_category', 'news_author')
+    df = pd.DataFrame.from_records(news_data)
+    # Define the vectorizer
+    vectorizer = TfidfVectorizer()
+    # Extract the features
+    X = vectorizer.fit_transform(df['content'])
+    # Compute the similarity matrix
+    similarity = cosine_similarity(X)
+    # Get recommendations for a news article
+    news_id = 6
+    indices = similarity[news_id].argsort()[-5:][::-1]
+    rec = [df.iloc[i]['title'] for i in indices]
+    print(news_data[news_id]['title'])
+    print(rec)
+    return HttpResponse(rec)

@@ -1,3 +1,5 @@
+import time
+
 import schedule
 
 
@@ -6,20 +8,10 @@ class ServicesScheduler:
         self._running = False
 
     # ==================== Main scheduling functions ====================#
-    def every_day_schedule(
-        self,
-        task: "function",
-        hour: str = "00",
-        minute: str = "00",
-    ):
+    def every_day_schedule(self, task: "function", hour: str = "00", minute: str = "00"):
         schedule.every().day.at(f"{hour}:{minute}").do(task)
 
-    def every_week_schedule(
-        self,
-        task: "function",
-        hour: str = "00",
-        minute: str = "00",
-    ):
+    def every_week_schedule(self, task: "function", hour: str = "00", minute: str = "00"):
         schedule.every().sunday.at(f"{hour}:{minute}").do(task)
 
     # ==================== Testing scheduling functions ====================#
@@ -30,6 +22,7 @@ class ServicesScheduler:
     def run(self):
         self._running = True
         while self._running:
+            time.sleep(0.01)
             schedule.run_pending()
 
     def stop(self):
