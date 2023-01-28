@@ -14,7 +14,7 @@
       "provider": "name",
       "publishedAt": "publishedAt",
       "source": "url",
-      "category": "title",
+      "category": "notfound",
       "author": "author"
     },
     "error": "no category"
@@ -22,20 +22,20 @@
   {
     "active": false,
     "host": "api.thenewsapi.com",
-    "path": "/v1/news/all?language&api_token=",
+    "path": "/v1/news/all?language=en&api_token=",
     "token": "4yZXw1TiQcsYZtae1OBqs8LYk7mNwKGbC0aMAjZO",
     "requestNb": 150,
     "mapping": {
       "dataPath": "data",
       "title": "title",
-      "subTitle": "snippet",
-      "content": "description",
+      "subTitle": "description",
+      "content": "snippet",
       "imageUrl": "image_url",
       "provider": "source",
       "publishedAt": "published_at",
       "source": "url",
       "category": "categories",
-      "author": "title"
+      "author": "notfound"
     },
     "error": "author not found"
   },
