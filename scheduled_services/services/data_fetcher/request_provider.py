@@ -2,10 +2,9 @@ import json
 import time
 import ast
 import requests
-from django.db import IntegrityError
 from jsonpath_ng import parse
 
-from news.models import News, Provider, Category
+from django.db import IntegrityError
 
 
 def _parse_list_str(list_str: str) -> list[str]:
@@ -18,7 +17,7 @@ def _parse_list_str(list_str: str) -> list[str]:
 
 
 class RequestProvider:
-    def __init__(self, host: str, token: str, provider: Provider) -> None:
+    def __init__(self, host: str, token: str, provider: "Provider") -> None:
         self._host = host
         self._token = token
         self.provider = provider
@@ -26,7 +25,7 @@ class RequestProvider:
         self.sleep_time = 2  # in seconds
 
     def request(self):
-        print("\tRequesting...")
+        print("\tRequesting...", end=" ")
         return requests.get(f"http://{self._host}{self.provider.path}{self._token}")
 
     def handle_error(self, response_code: int, response):
@@ -57,11 +56,13 @@ class RequestProvider:
             self.handle_response(response.content)
 
     def handle_response(self, response):
+        from news.models import Category, Provider, News
+
         print(self._host)
-        print("\tHandling...")
-        print(f"{type(response) = }")
-        print(f"{len(response) = }")
-        print(response[0: len(response) // 4])
+        print("\tHandling...", end=" ")
+        # print(f"{type(response) = }")
+        # print(f"{len(response) = }")
+        # print(response[0: len(response) // 4])
         response = json.loads(response.decode())
         title_expr = parse("$.." + self.provider.title_map)
         sub_title_expr = parse("$.." + self.provider.subTitle_map)
@@ -149,3 +150,4 @@ class RequestProvider:
                 news_m.save()
             except IntegrityError:
                 pass
+        print(" Done")
