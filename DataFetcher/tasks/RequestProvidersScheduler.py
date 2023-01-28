@@ -13,7 +13,7 @@ class RequestProvidersScheduler:
 
     def stop(self):
         print("Exiting Scheduler...", end="")
-        schedule.clear()
+        # schedule.clear()
         self.running = False
 
     def run(self):

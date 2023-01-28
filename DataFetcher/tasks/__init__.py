@@ -6,11 +6,13 @@ import schedule
 from DataFetcher.tasks.RequestProvider import RequestProvider
 from DataFetcher.tasks.RequestProvidersScheduler import RequestProvidersScheduler
 from news.models import Provider
+from scheduled_services.services import start
 
 scheduler = RequestProvidersScheduler([], True)  # Add True For Debugging
 
 
 def run():
+    start()
     news_api = []
     scheduler.running = True
     providers = Provider.objects.all()

@@ -111,7 +111,7 @@ class RequestProvider:
             if not all((title, sub_title, content, url_to_image, published_at, src)):
                 continue
             response = requests.get(url_to_image)
-            if response.status_code != 400:
+            if response.status_code != requests.codes.ok:
                 continue
             try:
                 category_m = Category.objects.get(name=category)
