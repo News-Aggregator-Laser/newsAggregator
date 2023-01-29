@@ -11,17 +11,17 @@
     <h1>Community Comments</h1>
     <div class="comments-list">
         {% if comments %}
-        {% for comment in comments %}
-        <div class="comment-box">
-            <h3 class="comment-author">{{ comment.user }} - <span class="comment-date">{{ comment.created_at
-                    }}</span>
-            </h3>
-            <p class="comment-content">{{ comment.content }}</p>
-        </div>
-        {% endfor %}
+            {% for comment in comments %}
+                <div class="comment-box">
+                    <h3 class="comment-author">{{ comment.user }} - <span
+                            class="comment-date">{{ comment.created_at }}</span>
+                    </h3>
+                    <p class="comment-content">{{ comment.content }}</p>
+                </div>
+            {% endfor %}
 
         {% else %}
-        <h2 style="color: rgba(0, 0, 0, 0.5);">No comments right now</h2>
+            <h2 style="color: rgba(0, 0, 0, 0.5);">No comments right now</h2>
         {% endif %}
 
     </div>

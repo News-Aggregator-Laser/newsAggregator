@@ -8,7 +8,10 @@ urlpatterns = [
     path("history/", HistoryViewSet.as_view({"post": "create"})),
     path("history/<int:pk>", HistoryViewSet.as_view({"delete": "destroy"})),
     path("like/", LikeViewSet.as_view({"post": "create"})),
+    path("like/<int:pk>", LikeViewSet.as_view({"delete": "destroy"})),
     path("comment/", CommentViewSet.as_view({"post": "create"})),
+    path("comment/<int:pk>", CommentViewSet.as_view({"delete": "destroy"})),
     path("subscription/", SubscriptionViewSet.as_view({"post": "create"})),
+    path("subscription/<str:pk>", SubscriptionViewSet.as_view({"delete": "destroy"})),
 
 ]

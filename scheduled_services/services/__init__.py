@@ -47,8 +47,8 @@ class ScheduledServices:
         self.scheduler.every_seconds_schedule(self._check_for_restart, 60)
 
         # ============= Just for testing =============#
-        self.scheduler.every_seconds_schedule(self.email_service.send_emails)
-        self.scheduler.every_seconds_schedule(self.db_cleaner.clean_db, 25)
+        # self.scheduler.every_seconds_schedule(self.email_service.send_emails)
+        # self.scheduler.every_seconds_schedule(self.db_cleaner.clean_db, 25)
         # ============= Just for testing =============#
 
         # start scheduler

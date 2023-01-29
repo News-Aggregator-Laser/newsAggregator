@@ -1,15 +1,13 @@
-from django.shortcuts import render
-from rest_framework import viewsets, status
+import base64
+from rest_framework import status
+# Create your views here.
+from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from api.serializers import ReadLaterSerializer, HistorySerializer, LikeSerializer, CommentSerializer, SubscriptionSerializer
 from news.models import ReadLater, History, Like, Comment, Subscription
-
-# Create your views here.
-from rest_framework import viewsets
 
 
 class ReadLaterViewSet(viewsets.ModelViewSet):
@@ -42,11 +40,11 @@ class HistoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        history = History.objects.filter(user=request.user, news_id=request.data["news"]).update(is_removed=False)
+        if not history:
+            history = History.objects.create(user=request.user, news_id=request.data["news"])
+            history.save()
+        return Response(status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         news_id = kwargs.get("pk")
@@ -80,6 +78,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
+def decode(code):
+    return base64.b64decode(code).decode("utf-8")
+
+
 class SubscriptionViewSet(viewsets.ModelViewSet):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
@@ -90,4 +92,9 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         if not subscription:
             subscription = Subscription.objects.create(email=request.data["email"])
             subscription.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, *args, **kwargs):
+        subscription_id = kwargs.get("pk")
+        Subscription.objects.filter(email=decode(subscription_id)).update(is_subscribed=False)
         return Response(status=status.HTTP_201_CREATED)

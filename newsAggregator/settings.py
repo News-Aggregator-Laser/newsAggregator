@@ -44,6 +44,20 @@ INSTALLED_APPS = [
     "api",
     "scheduled_services",
 ]
+# Use the SMTP email backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Set the hostname and port of your SMTP server
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# Set your full Gmail address and password as the authentication credentials
+EMAIL_HOST_USER = 'email@gmail.com'
+EMAIL_HOST_PASSWORD = 'password'
+
+# Set the name that will be displayed as the sender of the email
+EMAIL_FROM_NAME = 'Laser News'
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -205,7 +219,7 @@ JAZZMIN_SETTINGS = {
     # Hide these models when generating side menu (e.g auth.user)
     "hide_models": [],
     # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
-    "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
+    "order_with_respect_to": ["auth", "news"],
     # Custom links to append to app groups, keyed on app name
     "custom_links": {
         # "books": [
