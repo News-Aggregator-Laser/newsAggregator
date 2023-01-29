@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test
-from django.db.models import Count
+from django.db.models import Count, QuerySet
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import *
@@ -107,11 +107,12 @@ def category(request, category: str):
         category_news = _add_read_later_to_news(category_news, request.user)
     return render(
         request,
-        "category_news.html",
+        "news_list.html",
         {
             **_common_vars(request.user.is_anonymous),
             "category": category,
             "news": _news_to_json(category_news),
+            "title": category + " News"
         },
     )
 
@@ -137,10 +138,11 @@ def read_later(request):
         article.readLater = True
     return render(
         request,
-        "read_later.html",
+        "news_list.html",
         {
             **_common_vars(request.user.is_anonymous),
             "news": _news_to_json(read_later_news),
+            "title": "Read Later"
         },
     )
 
@@ -154,10 +156,11 @@ def history(request):
     history_news = _add_read_later_to_news(history_news, request.user)
     return render(
         request,
-        "history.html",
+        "news_list.html",
         {
             **_common_vars(request.user.is_anonymous),
             "news": _news_to_json(history_news),
+            "title": "History"
         },
     )
 
@@ -167,27 +170,25 @@ def your_feed(request):
     recent_liked_news_ids = recent_liked_news.values_list('id', flat=True)
     recent_unliked_news = News.objects.exclude(like__user_id=request.user.id).filter(history__user=request.user.id).order_by('-publish_date')[:3]
     recent_unliked_news_ids = recent_unliked_news.values_list('id', flat=True)
-
+    recent_news_set = recent_liked_news | recent_unliked_news
     # Load the data
-    # df = pd.read_csv('news_data.csv')
     ten_days_ago = datetime.now() - timedelta(days=1000)
-    # filter(publish_date__gt=ten_days_ago)
-    news_data = News.objects.all().values('id', 'title', 'subtitle', 'content', 'news_category__name', 'news_author')
+    news_data = News.objects.filter(publish_date__gt=ten_days_ago).values('id', 'title', 'subtitle', 'content', 'news_category__name', 'news_author')
     df = pd.DataFrame.from_records(news_data)
     # Define the vectorizer
     vectorizer = TfidfVectorizer()
     # Extract the features
     df['concatenated_fields'] = df['title'].str.cat(df[['subtitle', 'content', 'news_category__name', 'news_author']], sep=' ')
-    for df_item in df['concatenated_fields']:
-        print(df_item)
     X = vectorizer.fit_transform(df['concatenated_fields'])
     # Compute the similarity matrix
     similarity = cosine_similarity(X)
     # Get recommendations for a news article
-    news_id = 19
-    indices = similarity[news_id].argsort()[-5:][::-1]
-    rec = [df.iloc[i]['title'] for i in indices]
-    print(news_data[news_id]['title'])
-    # for recommendation in rec:
-    #     print(recommendation)
-    return HttpResponse(rec)
+    news_set = QuerySet(News)
+    for news_recent_item in recent_news_set:
+        indices = similarity[news_recent_item.id].argsort()[-5:][::-1]
+        rec = [df.iloc[i]['title'] for i in indices]
+        for recommendation in rec:
+            news_set = news_set | News.objects.filter(title=recommendation)
+            # print(recommendation)
+    recommended_news_set = news_set.difference(recent_news_set)
+    return HttpResponse(recommended_news_set)
