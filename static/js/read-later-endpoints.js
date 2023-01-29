@@ -7,7 +7,7 @@ readLaterButtons.forEach(button => {
         if (button.classList.contains("bi-bookmark")) {
             url = `/read-later/`;
             method = 'POST';
-            body = JSON.stringify({'news': postId});
+            body = JSON.stringify({ 'news': postId });
             button.querySelector("span").innerHTML = "Remove from Read-Later";
         }
         // remove from read-later
@@ -19,15 +19,18 @@ readLaterButtons.forEach(button => {
         // Send the request
         fetch(url, {
             method,
-            headers: {'Content-Type': 'application/json', "X-CSRFToken": csrftoken},
+            headers: { 'Content-Type': 'application/json', "X-CSRFToken": csrftoken },
             body,
 
         }).then(response => {
             // if request is successful (action is performed)
-
             if (response.ok) {
-                button.classList.toggle('bi-bookmark');
-                button.classList.toggle('bi-bookmark-fill');
+                if (method == "delete") {
+                    button.parentNode.parentNode.parentNode.style.display = "none";
+                } else {
+                    button.classList.toggle('bi-bookmark');
+                    button.classList.toggle('bi-bookmark-fill');
+                }
             } else {
                 window.location.href = "/login";
             }
