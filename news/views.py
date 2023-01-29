@@ -166,10 +166,9 @@ def history(request):
 
 
 def your_feed(request):
-    recent_liked_news = News.objects.filter(like__user_id=request.user.id).annotate(like_count=Count('like')).order_by('-publish_date')[:3]
-    recent_liked_news_ids = recent_liked_news.values_list('id', flat=True)
-    recent_unliked_news = News.objects.exclude(like__user_id=request.user.id).filter(history__user=request.user.id).order_by('-publish_date')[:3]
-    recent_unliked_news_ids = recent_unliked_news.values_list('id', flat=True)
+    recent_liked_news = News.objects.filter(like__user_id=request.user.id, history__is_removed=False).annotate(like_count=Count('like')).order_by(
+        '-publish_date')[:5]
+    recent_unliked_news = News.objects.exclude(like__user_id=request.user.id).filter(history__user=request.user.id,history__is_removed=False).order_by('-publish_date')[:5]
     recent_news_set = recent_liked_news | recent_unliked_news
     # Load the data
     ten_days_ago = datetime.now() - timedelta(days=1000)
@@ -183,12 +182,31 @@ def your_feed(request):
     # Compute the similarity matrix
     similarity = cosine_similarity(X)
     # Get recommendations for a news article
-    news_set = QuerySet(News)
+    news_set = News.objects.none()
     for news_recent_item in recent_news_set:
-        indices = similarity[news_recent_item.id].argsort()[-5:][::-1]
+        print(news_recent_item.title)
+        # print(df.iloc[0]['id'])
+        # print(News.objects.first().id)
+        # print("the news to recommend " + str(news_recent_item.id) + news_recent_item.title)
+        # print(str(df['id']) + " " + str(df['title']))
+        indices = similarity[news_recent_item.id - 1].argsort()[-5:][::-1]
         rec = [df.iloc[i]['title'] for i in indices]
         for recommendation in rec:
+            print(recommendation)
             news_set = news_set | News.objects.filter(title=recommendation)
-            # print(recommendation)
     recommended_news_set = news_set.difference(recent_news_set)
-    return HttpResponse(recommended_news_set)
+    recommended_news_set = _add_read_later_to_news(recommended_news_set, request.user)
+    # print(len(recommended_news_set))
+    # print(recommended_news_set)
+    # print(len(news_set))
+    # print(news_set)
+
+    return render(
+        request,
+        "news_list.html",
+        {
+            **_common_vars(request.user.is_anonymous),
+            "news": _news_to_json(recommended_news_set),
+            "title": "your feed"
+        },
+    )
