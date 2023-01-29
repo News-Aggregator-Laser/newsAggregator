@@ -168,7 +168,8 @@ def history(request):
 def your_feed(request):
     recent_liked_news = News.objects.filter(like__user_id=request.user.id, history__is_removed=False).annotate(like_count=Count('like')).order_by(
         '-publish_date')[:5]
-    recent_unliked_news = News.objects.exclude(like__user_id=request.user.id).filter(history__user=request.user.id,history__is_removed=False).order_by('-publish_date')[:5]
+    recent_unliked_news = News.objects.exclude(like__user_id=request.user.id).filter(history__user=request.user.id,
+                                                                                     history__is_removed=False).order_by('-publish_date')[:5]
     recent_news_set = recent_liked_news | recent_unliked_news
     # Load the data
     ten_days_ago = datetime.now() - timedelta(days=1000)
@@ -184,23 +185,16 @@ def your_feed(request):
     # Get recommendations for a news article
     news_set = News.objects.none()
     for news_recent_item in recent_news_set:
-        print(news_recent_item.title)
-        # print(df.iloc[0]['id'])
-        # print(News.objects.first().id)
-        # print("the news to recommend " + str(news_recent_item.id) + news_recent_item.title)
-        # print(str(df['id']) + " " + str(df['title']))
-        indices = similarity[news_recent_item.id - 1].argsort()[-5:][::-1]
-        rec = [df.iloc[i]['title'] for i in indices]
-        for recommendation in rec:
-            print(recommendation)
-            news_set = news_set | News.objects.filter(title=recommendation)
+        indices = similarity[news_recent_item.id - 1].argsort()[-10:][::-1]
+        for i in indices:
+            similarity_coefficient = similarity[news_recent_item.id - 1][i]
+            if similarity_coefficient > 0.1:
+                print("Similarity between feature vectors", news_recent_item.id - 1, "and", i, "is:", similarity_coefficient)
+                rec = df.iloc[i]['title']
+                news_set = news_set | News.objects.filter(title=rec)
+
     recommended_news_set = news_set.difference(recent_news_set)
     recommended_news_set = _add_read_later_to_news(recommended_news_set, request.user)
-    # print(len(recommended_news_set))
-    # print(recommended_news_set)
-    # print(len(news_set))
-    # print(news_set)
-
     return render(
         request,
         "news_list.html",
