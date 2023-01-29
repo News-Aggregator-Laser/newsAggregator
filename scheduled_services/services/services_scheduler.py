@@ -1,6 +1,7 @@
 import time
 
 import schedule
+from time import sleep
 
 from .data_fetcher.request_provider import RequestProvider
 
@@ -47,6 +48,7 @@ class ServicesScheduler:
         while self._running:
             time.sleep(0.01)
             schedule.run_pending()
+            sleep(0.1)
         print("Scheduler stopped")
 
     def stop(self):
