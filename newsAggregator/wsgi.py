@@ -21,7 +21,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'newsAggregator.settings')
 application = get_wsgi_application()
 if not cache.get('function_has_run'):
     fill()
-    run()
+    # run()
 
 
     @receiver(post_save, sender=Provider)

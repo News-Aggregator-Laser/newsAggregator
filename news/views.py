@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import *
@@ -162,22 +163,31 @@ def history(request):
 
 
 def your_feed(request):
+    recent_liked_news = News.objects.filter(like__user_id=request.user.id).annotate(like_count=Count('like')).order_by('-publish_date')[:3]
+    recent_liked_news_ids = recent_liked_news.values_list('id', flat=True)
+    recent_unliked_news = News.objects.exclude(like__user_id=request.user.id).filter(history__user=request.user.id).order_by('-publish_date')[:3]
+    recent_unliked_news_ids = recent_unliked_news.values_list('id', flat=True)
+
     # Load the data
     # df = pd.read_csv('news_data.csv')
     ten_days_ago = datetime.now() - timedelta(days=1000)
     # filter(publish_date__gt=ten_days_ago)
-    news_data = News.objects.all().values('id', 'title', 'subtitle', 'content', 'news_category', 'news_author')
+    news_data = News.objects.all().values('id', 'title', 'subtitle', 'content', 'news_category__name', 'news_author')
     df = pd.DataFrame.from_records(news_data)
     # Define the vectorizer
     vectorizer = TfidfVectorizer()
     # Extract the features
-    X = vectorizer.fit_transform(df['content'])
+    df['concatenated_fields'] = df['title'].str.cat(df[['subtitle', 'content', 'news_category__name', 'news_author']], sep=' ')
+    for df_item in df['concatenated_fields']:
+        print(df_item)
+    X = vectorizer.fit_transform(df['concatenated_fields'])
     # Compute the similarity matrix
     similarity = cosine_similarity(X)
     # Get recommendations for a news article
-    news_id = 6
+    news_id = 19
     indices = similarity[news_id].argsort()[-5:][::-1]
     rec = [df.iloc[i]['title'] for i in indices]
     print(news_data[news_id]['title'])
-    print(rec)
+    # for recommendation in rec:
+    #     print(recommendation)
     return HttpResponse(rec)
