@@ -29,7 +29,7 @@ class CMSAdmin(admin.ModelAdmin):
 
 
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'news', 'created_at']
+    list_display = ['id', 'user', 'news', 'is_removed']
 
 
 class CommentAdmin(admin.ModelAdmin):

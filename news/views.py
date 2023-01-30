@@ -43,13 +43,19 @@ def _common_vars(is_anonymous) -> dict:
     }
 
 
-def _add_read_later_to_news(news, user):
+def _add_read_later_like_to_news(news, user):
     for article in news:
         try:
-            readlater = ReadLater.objects.get(user=user, news=article)
-            article.readLater = not readlater.is_removed
+            read_later = ReadLater.objects.get(user=user, news=article)
+            article.readLater = not read_later.is_removed
         except ReadLater.DoesNotExist:
             article.readLater = False
+
+        try:
+            like = Like.objects.get(user=user, news=article)
+            article.favorite = not like.is_removed
+        except Like.DoesNotExist:
+            article.favorite = False
     return news
 
 
@@ -65,7 +71,7 @@ def _encode_article(article: News) -> dict:
         "news_category": article.news_category.name,
         "news_author": article.news_author,
         "readLater": article.readLater if article.readLater else False,
-        "favorite": False,  # ! change when favorite is implemented
+        "favorite": article.favorite if article.favorite else False,
     }
 
 
@@ -86,7 +92,7 @@ def home(request):
     }
     popular_news = News.objects.all().filter(is_archived=False).order_by("-publish_date")[:10]
     if not request.user.is_anonymous:
-        popular_news = _add_read_later_to_news(popular_news, request.user)
+        popular_news = _add_read_later_like_to_news(popular_news, request.user)
     return render(
         request,
         "index.html",
@@ -102,7 +108,7 @@ def home(request):
 def category(request, category: str):
     category_news = News.objects.filter(news_category=Category.objects.get(name=category), is_archived=False)[:20]
     if not request.user.is_anonymous:
-        category_news = _add_read_later_to_news(category_news, request.user)
+        category_news = _add_read_later_like_to_news(category_news, request.user)
     return render(
         request,
         "news_list.html",
@@ -147,7 +153,7 @@ def read_later(request):
 def history(request):
     history = History.objects.filter(user=request.user, is_removed=False, news__is_archived=False).values_list("news_id", flat=True)
     history_news = News.objects.filter(id__in=history)
-    history_news = _add_read_later_to_news(history_news, request.user)
+    history_news = _add_read_later_like_to_news(history_news, request.user)
     return render(
         request,
         "news_list.html",
@@ -155,6 +161,22 @@ def history(request):
             **_common_vars(request.user.is_anonymous),
             "news": _news_to_json(history_news),
             "title": "History"
+        },
+    )
+
+
+@authenticated_required
+def favorite(request):
+    favorite = Like.objects.filter(user=request.user, is_removed=False, news__is_archived=False).values_list("news_id", flat=True)
+    favorite_news = News.objects.filter(id__in=favorite)
+    favorite_news = _add_read_later_like_to_news(favorite_news, request.user)
+    return render(
+        request,
+        "news_list.html",
+        {
+            **_common_vars(request.user.is_anonymous),
+            "news": _news_to_json(favorite_news),
+            "title": "Favorite"
         },
     )
 
@@ -187,7 +209,7 @@ def your_feed(request):
                 news_set = news_set | News.objects.filter(title=rec)
 
     recommended_news_set = news_set.difference(recent_news_set)
-    recommended_news_set = _add_read_later_to_news(recommended_news_set, request.user)
+    recommended_news_set = _add_read_later_like_to_news(recommended_news_set, request.user)
     return render(
         request,
         "news_list.html",
