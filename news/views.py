@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test
-from django.db.models import Count, QuerySet
-from django.http import HttpResponse
+from django.db.models import Count
 from django.shortcuts import render
 from .models import *
 from json import dumps
@@ -92,19 +91,15 @@ def _news_to_json(news) -> str:
 def home(request):
     common_vars = _common_vars(request.user.is_anonymous)
     # top news (for main slider)
-    top_news = (
-        News.objects.all().filter(is_archived=False).order_by("-publish_date")[:10]
-    )
+    top_news = News.objects.all().filter(is_archived=False, news_author__is_active=True, news_provider__is_active=True).order_by("-publish_date")[:10]
     # top news in each selected category
     top_categories_news = {
-        category: News.objects.filter(
-            is_top_in_category=True, news_category=category, is_archived=False
-        )
+        category: News.objects.filter(is_top_in_category=True, news_category=category, is_archived=False, news_author__is_active=True,
+                                      news_provider__is_active=True)
         for category in common_vars["selected_categories"]
     }
-    popular_news = (
-        News.objects.all().filter(is_archived=False).order_by("-publish_date")[:10]
-    )
+    popular_news = News.objects.all().filter(is_archived=False, news_author__is_active=True, news_provider__is_active=True).order_by("-publish_date")[
+                   :10]
     if not request.user.is_anonymous:
         popular_news = _add_read_later_like_to_news(popular_news, request.user)
     return render(
@@ -120,10 +115,10 @@ def home(request):
 
 
 def category(request, category: str):
-    category_news = News.objects.filter(
-        news_category=Category.objects.get(name=category), is_archived=False
-    )[:20]
-    category_news = _add_read_later_like_to_news(category_news, request.user)
+    category_news = News.objects.filter(news_category=Category.objects.get(name=category), is_archived=False, news_author__is_active=True,
+                                        news_provider__is_active=True)[:20]
+    if not request.user.is_anonymous:
+        category_news = _add_read_later_like_to_news(category_news, request.user)
     return render(
         request,
         "news_list.html",
@@ -131,7 +126,7 @@ def category(request, category: str):
             **_common_vars(request.user.is_anonymous),
             "category": category,
             "news": _news_to_json(category_news),
-            "title": category + " News",
+            "title": category + " News"
         },
     )
 
@@ -142,16 +137,15 @@ def article(request, article_id: int):
         "article_details.html",
         {
             **_common_vars(request.user.is_anonymous),
-            "article": News.objects.get(id=article_id, is_archived=False),
+            "article": News.objects.get(id=article_id, is_archived=False, news_author__is_active=True, news_provider__is_active=True),
         },
     )
 
 
 @authenticated_required
 def read_later(request):
-    read_later = ReadLater.objects.filter(
-        user=request.user, is_removed=False, news__is_archived=False
-    ).values_list("news_id", flat=True)
+    read_later = ReadLater.objects.filter(user=request.user, is_removed=False, news__is_archived=False, news__news_author__is_active=True,
+                                          news__news_provider__is_active=True).values_list("news_id", flat=True)
     read_later_news = News.objects.filter(id__in=read_later)
     for article in read_later_news:
         article.readLater = True
@@ -161,16 +155,15 @@ def read_later(request):
         {
             **_common_vars(request.user.is_anonymous),
             "news": _news_to_json(read_later_news),
-            "title": "Read Later",
+            "title": "Read Later"
         },
     )
 
 
 @authenticated_required
 def history(request):
-    history = History.objects.filter(
-        user=request.user, is_removed=False, news__is_archived=False
-    ).values_list("news_id", flat=True)
+    history = History.objects.filter(user=request.user, is_removed=False, news__is_archived=False, news__news_author__is_active=True,
+                                     news__news_provider__is_active=True).values_list("news_id", flat=True)
     history_news = News.objects.filter(id__in=history)
     history_news = _add_read_later_like_to_news(history_news, request.user)
     return render(
@@ -179,16 +172,15 @@ def history(request):
         {
             **_common_vars(request.user.is_anonymous),
             "news": _news_to_json(history_news),
-            "title": "History",
+            "title": "History"
         },
     )
 
 
 @authenticated_required
 def favorite(request):
-    favorite = Like.objects.filter(
-        user=request.user, is_removed=False, news__is_archived=False
-    ).values_list("news_id", flat=True)
+    favorite = Like.objects.filter(user=request.user, is_removed=False, news__is_archived=False, news__news_provider__is_active=True,
+                                   news__news_author__is_active=True).values_list("news_id", flat=True)
     favorite_news = News.objects.filter(id__in=favorite)
     favorite_news = _add_read_later_like_to_news(favorite_news, request.user)
     return render(
@@ -197,37 +189,25 @@ def favorite(request):
         {
             **_common_vars(request.user.is_anonymous),
             "news": _news_to_json(favorite_news),
-            "title": "Favorite",
+            "title": "Favorite"
         },
     )
 
 
-@authenticated_required
 def your_feed(request):
-    recent_liked_news = (
-        News.objects.filter(like__user_id=request.user.id)
-        .annotate(like_count=Count("like"))
-        .order_by("-publish_date")[:5]
-    )
-    recent_unliked_news = (
-        News.objects.exclude(like__user_id=request.user.id)
-        .filter(history__user=request.user.id)
-        .order_by("-publish_date")[:5]
-    )
+    recent_liked_news = News.objects.filter(like__user_id=request.user.id).annotate(like_count=Count('like')).order_by(
+        '-publish_date')[:5]
+    recent_unliked_news = News.objects.exclude(like__user_id=request.user.id).filter(history__user=request.user.id).order_by('-publish_date')[:5]
     recent_news_set = recent_liked_news | recent_unliked_news
     # Load the data
     ten_days_ago = datetime.now() - timedelta(days=1000)
-    news_data = News.objects.filter(publish_date__gt=ten_days_ago).values(
-        "id", "title", "subtitle", "content", "news_category__name", "news_author"
-    )
+    news_data = News.objects.filter(publish_date__gt=ten_days_ago).values('id', 'title', 'subtitle', 'content', 'news_category__name', 'news_author')
     df = pd.DataFrame.from_records(news_data)
     # Define the vectorizer
     vectorizer = TfidfVectorizer()
     # Extract the features
-    df["concatenated_fields"] = df["title"].str.cat(
-        df[["subtitle", "content", "news_category__name", "news_author"]], sep=" "
-    )
-    X = vectorizer.fit_transform(df["concatenated_fields"])
+    df['concatenated_fields'] = df['title'].str.cat(df[['subtitle', 'content', 'news_category__name', 'news_author']], sep=' ')
+    X = vectorizer.fit_transform(df['concatenated_fields'])
     # Compute the similarity matrix
     similarity = cosine_similarity(X)
     # Get recommendations for a news article
@@ -237,27 +217,18 @@ def your_feed(request):
         for i in indices:
             similarity_coefficient = similarity[news_recent_item.id - 1][i]
             if similarity_coefficient > 0.1:
-                print(
-                    "Similarity between feature vectors",
-                    news_recent_item.id - 1,
-                    "and",
-                    i,
-                    "is:",
-                    similarity_coefficient,
-                )
-                rec = df.iloc[i]["title"]
+                print("Similarity between feature vectors", news_recent_item.id - 1, "and", i, "is:", similarity_coefficient)
+                rec = df.iloc[i]['title']
                 news_set = news_set | News.objects.filter(title=rec)
 
     recommended_news_set = news_set.difference(recent_news_set)
-    recommended_news_set = _add_read_later_like_to_news(
-        recommended_news_set, request.user
-    )
+    recommended_news_set = _add_read_later_like_to_news(recommended_news_set, request.user)
     return render(
         request,
         "news_list.html",
         {
             **_common_vars(request.user.is_anonymous),
             "news": _news_to_json(recommended_news_set),
-            "title": "your feed",
+            "title": "your feed"
         },
     )
