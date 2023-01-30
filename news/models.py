@@ -111,7 +111,7 @@ class Comment(models.Model):
 class Like(models.Model):
     news = models.ForeignKey(News, on_delete=models.CASCADE, db_index=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    is_removed = models.BooleanField(default=False)
 
 
 class Subscription(models.Model):
