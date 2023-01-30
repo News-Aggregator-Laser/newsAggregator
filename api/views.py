@@ -64,6 +64,11 @@ class LikeViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def destroy(self, request, *args, **kwargs):
+        news_id = kwargs.get("pk")
+        Like.objects.filter(user=request.user, news=news_id).delete()
+        return Response(status=status.HTTP_201_CREATED)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()

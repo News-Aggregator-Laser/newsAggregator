@@ -1,20 +1,20 @@
-const readLaterButtons = document.querySelectorAll('.read-later-btn');
-readLaterButtons.forEach(button => {
+const likeButtons = document.querySelectorAll('.favorite-btn');
+likeButtons.forEach(button => {
     button.addEventListener('click', () => {
         const postId = button.getAttribute('data-post-id');
         let url, body, method;
         // add to read-later
-        if (button.classList.contains("bi-bookmark")) {
-            url = `/read-later/`;
+        if (button.classList.contains("bi-star")) {
+            url = `/like/`;
             method = 'POST';
             body = JSON.stringify({'news': postId});
-            button.querySelector("span").innerHTML = "Remove from Read-Later";
+            button.querySelector("span").innerHTML = "Remove from favorite";
         }
-        // remove from read-later
+        // remove from like
         else {
-            url = `/read-later/` + postId;
+            url = `/like/` + postId;
             method = "delete"
-            button.querySelector("span").innerHTML = "Add to Read-Later";
+            button.querySelector("span").innerHTML = "Add To favorite";
         }
         // Send the request
         fetch(url, {
@@ -25,12 +25,11 @@ readLaterButtons.forEach(button => {
         }).then(response => {
             // if request is successful (action is performed)
             if (response.ok) {
-                console.log(window.location.pathname)
-                if (method === "delete" && window.location.pathname === "/read_later/") {
+                if (method === "delete"&&window.location.pathname==="/favorite/") {
                     button.parentNode.parentNode.parentNode.style.display = "none";
                 } else {
-                    button.classList.toggle('bi-bookmark');
-                    button.classList.toggle('bi-bookmark-fill');
+                    button.classList.toggle('bi-star');
+                    button.classList.toggle('bi-star-fill');
                 }
             } else {
                 window.location.href = "/login";
