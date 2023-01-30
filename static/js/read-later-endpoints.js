@@ -25,7 +25,7 @@ readLaterButtons.forEach(button => {
         }).then(response => {
             // if request is successful (action is performed)
             if (response.ok) {
-                if (method == "delete") {
+                if (method === "delete") {
                     button.parentNode.parentNode.parentNode.style.display = "none";
                 } else {
                     button.classList.toggle('bi-bookmark');

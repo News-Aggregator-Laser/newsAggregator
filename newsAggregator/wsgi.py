@@ -13,22 +13,22 @@ from threading import Thread
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.wsgi import get_wsgi_application
-
-from scheduled_services import ScheduledServices
+from django.core.cache import cache
 from news.models import Provider
+from scheduled_services.services import ScheduledServices
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "newsAggregator.settings")
 application = get_wsgi_application()
 
+if not cache.get("function_has_run"):
+    scheduled_services = ScheduledServices()
+    scheduler_thread = Thread(target=scheduled_services.run)
+    scheduler_thread.start()
+    cache.set("function_has_run", True, None)
 
-scheduled_services = ScheduledServices()
-scheduler_thread = Thread(target=scheduled_services.run)
-scheduler_thread.start()
-
-
-@receiver(post_save, sender=Provider)
-def my_callback(sender, instance, created, **kwargs):
-    scheduled_services.restart()
+    @receiver(post_save, sender=Provider)
+    def my_callback(sender, instance, created, **kwargs):
+        scheduled_services.restart()
 
 
 # =============== OLD (Lal taware2) =============== #

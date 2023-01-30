@@ -38,7 +38,7 @@ class Provider(models.Model):
 
 
 class News(models.Model):
-    title = models.CharField(max_length=200, unique=True)
+    title = models.CharField(max_length=200, unique=True, db_index=True)
     subtitle = models.TextField()
     content = models.TextField()
     publish_date = models.DateTimeField()
@@ -62,8 +62,8 @@ class News(models.Model):
 
 
 class History(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    news = models.ForeignKey(News, on_delete=models.CASCADE, db_index=True)
     time = models.DateTimeField(auto_now_add=True)
     is_removed = models.BooleanField(default=False)
 
@@ -72,8 +72,8 @@ class History(models.Model):
 
 
 class ReadLater(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    news = models.ForeignKey(News, on_delete=models.CASCADE, db_index=True)
     is_removed = models.BooleanField(default=False)
 
     class Meta:
@@ -102,20 +102,20 @@ class CMS(models.Model):
 
 
 class Comment(models.Model):
-    news = models.ForeignKey(News, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    news = models.ForeignKey(News, on_delete=models.CASCADE, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Like(models.Model):
-    news = models.ForeignKey(News, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    news = models.ForeignKey(News, on_delete=models.CASCADE, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Subscription(models.Model):
-    email = models.EmailField()
+    email = models.EmailField(db_index=True)
     is_subscribed = models.BooleanField(default=True)
 
 # class NewsSource(models.Model):

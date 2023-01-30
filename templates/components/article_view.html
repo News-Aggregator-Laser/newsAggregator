@@ -17,7 +17,18 @@
         <i class="bi bi-twitter social-btn twt-btn"></i>
         <i class="bi bi-whatsapp social-btn wh.btn"></i>
     </div>
+    <script>
+        const data = {'news': {{ article.id }},};
+        fetch(`/history/`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', "X-CSRFToken": csrftoken},
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(data => {
 
+            });
+    </script>
     <!--Comment section -->
     {% include "components/comment_section.html" %}
 </div>

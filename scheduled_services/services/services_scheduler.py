@@ -1,3 +1,5 @@
+import time
+
 import schedule
 from time import sleep
 
@@ -44,6 +46,7 @@ class ServicesScheduler:
     def run(self):
         self._running = True
         while self._running:
+            time.sleep(0.01)
             schedule.run_pending()
             sleep(0.1)
         print("Scheduler stopped")

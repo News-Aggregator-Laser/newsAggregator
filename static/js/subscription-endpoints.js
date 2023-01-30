@@ -4,7 +4,7 @@ subscriptionButton.addEventListener('click', () => {
     // Send the request
     fetch(`/subscription/`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json', "X-CSRFToken": csrftoken },
         body: JSON.stringify({'email': email.value}),
 
     }).then(response => {
@@ -16,6 +16,6 @@ subscriptionButton.addEventListener('click', () => {
         }else {
             email.style.background = "#FF0000";
         }
-    })
+    });
 });
 
