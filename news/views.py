@@ -43,6 +43,14 @@ def _common_vars(is_anonymous) -> dict:
 
 
 def _add_read_later_like_to_news(news, user):
+    # if user is not authenticated
+    if user.is_anonymous:
+        for article in news:
+            article.readLater = False
+            article.favorite = False
+        return news
+
+    # if user is authenticated
     for article in news:
         try:
             read_later = ReadLater.objects.get(user=user, news=article)
