@@ -1,10 +1,35 @@
 import json
+import re
 import time
 import ast
 import requests
 from jsonpath_ng import parse
 
 from django.db import IntegrityError
+
+from news.models import Author, NewsSource
+
+
+def normalize_author(author):
+    # Use a regular expression to extract only the first and last name
+    match = re.search(r'(\w+)[\s\.]+(\w+)', author)
+    if match:
+        first_name, last_name = match.groups()
+        # Normalize the author name to lowercase
+        return f'{first_name.lower()} {last_name.lower()}'
+    else:
+        return author.lower()
+
+
+def normalize_source(source):
+    # Use a regular expression to extract only the relevant parts of the source name
+    match = re.search(r'([\w\s]+),?\s*(.*)', source)
+    if match:
+        first_part, second_part = match.groups()
+        # Normalize the source name to lowercase
+        return f'{first_part.lower()} {second_part.lower()}'.strip()
+    else:
+        return source.lower()
 
 
 def _parse_list_str(list_str: str) -> list[str]:
@@ -102,15 +127,14 @@ class RequestProvider:
                 if len(category) > 1 and "general" in category:
                     category.remove("general")
                 category = category[0]
-            # print(f"{category = }")
+            if not all((title, sub_title, content, url_to_image, published_at, src)):
+                continue
             if not author:
                 author = "Unknown"
             elif type(author) is str and "[" in author:
                 author = _parse_list_str(author)[0]
             elif type(author) is list:
                 author = author[0]
-            if not all((title, sub_title, content, url_to_image, published_at, src)):
-                continue
             try:
                 response = requests.get(url_to_image)
                 if response.status_code != requests.codes.ok:
@@ -122,20 +146,16 @@ class RequestProvider:
             except Category.DoesNotExist:
                 category_m = Category(name=category)
                 category_m.save()
-            # try:
-            #     news_source_m = NewsSource.objects.get(name=provider)
-            # except NewsSource.DoesNotExist:
-            #     news_source_m = NewsSource(name=provider)
-            #     news_source_m.save()
-            # try:
-            #     author_m = Author.objects.get(name=author)
-            # except Author.DoesNotExist:
-            #     author_m = Author(name=author)
-            #     author_m.save()
-            # try:
-            #     category_m = Category.objects.get(name=category)
-            # except Category.DoesNotExist:
-            #     pass
+            try:
+                news_source_m = NewsSource.objects.get(name=normalize_source(provider))
+            except NewsSource.DoesNotExist:
+                news_source_m = NewsSource(name=normalize_source(provider))
+                news_source_m.save()
+            try:
+                author_m = Author.objects.get(name=normalize_author(author))
+            except Author.DoesNotExist:
+                author_m = Author(name=normalize_author(author))
+                author_m.save()
             provider_m = Provider.objects.get(host=self.provider.host)
             news_m = News(
                 title=title,
@@ -146,11 +166,12 @@ class RequestProvider:
                 publish_date=published_at,
                 source=src,
                 news_category=category_m,
-                news_author=author,
-                news_source=provider,
+                news_author=author_m,
+                news_source=news_source_m,
             )
             try:
                 news_m.save()
             except IntegrityError:
                 pass
-        print(" Done")
+
+    print(" Done")

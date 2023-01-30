@@ -5,7 +5,7 @@ def fill():
     from news.models import Provider
 
     if not Provider.objects.all():
-        with open("DataFetcher/tasks/providers.json", "r") as file:
+        with open("scheduled_services/services/data_fetcher/providers.json", "r") as file:
             data = json.load(file)
         for element in data:
             provider = Provider(

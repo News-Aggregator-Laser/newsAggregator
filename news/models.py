@@ -37,6 +37,22 @@ class Provider(models.Model):
         return self.host
 
 
+class NewsSource(models.Model):
+    name = models.CharField(max_length=20, null=True)
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Author(models.Model):
+    name = models.CharField(max_length=200, null=True)
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class News(models.Model):
     title = models.CharField(max_length=200, unique=True, db_index=True)
     subtitle = models.TextField()
@@ -44,12 +60,12 @@ class News(models.Model):
     publish_date = models.DateTimeField()
     url_image = models.URLField()
     news_provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
-    # news_source = models.ForeignKey(NewsSource, on_delete=models.CASCADE)
-    news_source = models.CharField(max_length=100, null=True)
+    news_source = models.ForeignKey(NewsSource, on_delete=models.CASCADE)
+    # news_source = models.CharField(max_length=100, null=True)
     source = models.URLField()
     news_category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    # news_author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    news_author = models.CharField(max_length=100, null=True)
+    news_author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    # news_author = models.CharField(max_length=100, null=True)
     is_top_in_category = models.BooleanField(default=False)
     is_top_news = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
@@ -117,12 +133,3 @@ class Like(models.Model):
 class Subscription(models.Model):
     email = models.EmailField(db_index=True)
     is_subscribed = models.BooleanField(default=True)
-
-# class NewsSource(models.Model):
-#     name = models.CharField(max_length=20, null=True)
-#     is_active = models.BooleanField(default=False)
-#
-#
-# class Author(models.Model):
-#     name = models.CharField(max_length=200, null=True)
-#     is_active = models.BooleanField(default=False)
