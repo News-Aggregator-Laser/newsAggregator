@@ -66,3 +66,23 @@ const category_swiper = new Swiper(".category-swiper", {
         disableOnInteraction: false,
     },
 });
+
+
+// ========== Handle unloaded images ========== //
+function _isImageLoaded(img) {
+    return img.complete && img.naturalHeight !== 0;
+}
+
+function checkImages() {
+    const images = document.querySelectorAll("img");
+
+    images.forEach((img) => {
+        if (!_isImageLoaded(img)) {
+            src = img.src;
+            console.log(`${src} is not loaded | reloading again...`);
+            img.src = src + '?' + new Date().getTime();
+        }
+    });
+}
+
+checkImages();
