@@ -147,8 +147,7 @@ def read_later(request):
     read_later = ReadLater.objects.filter(user=request.user, is_removed=False, news__is_archived=False, news__news_author__is_active=True,
                                           news__news_source__is_active=True).values_list("news_id", flat=True)
     read_later_news = News.objects.filter(id__in=read_later)
-    for article in read_later_news:
-        article.readLater = True
+    _add_read_later_like_to_news(read_later_news, request.user)
     return render(
         request,
         "news_list.html",
@@ -201,12 +200,13 @@ def your_feed(request):
     recent_news_set = recent_liked_news | recent_unliked_news
     # Load the data
     ten_days_ago = datetime.now() - timedelta(days=1000)
-    news_data = News.objects.filter(publish_date__gt=ten_days_ago).values('id', 'title', 'subtitle', 'content', 'news_category__name', 'news_author')
+    news_data = News.objects.filter(publish_date__gt=ten_days_ago).values('id', 'title', 'subtitle', 'content', 'news_category__name',
+                                                                          'news_author__name')
     df = pd.DataFrame.from_records(news_data)
     # Define the vectorizer
     vectorizer = TfidfVectorizer()
     # Extract the features
-    df['concatenated_fields'] = df['title'].str.cat(df[['subtitle', 'content', 'news_category__name', 'news_author']], sep=' ')
+    df['concatenated_fields'] = df['title'].str.cat(df[['subtitle', 'content', 'news_category__name', 'news_author__name']], sep=' ')
     X = vectorizer.fit_transform(df['concatenated_fields'])
     # Compute the similarity matrix
     similarity = cosine_similarity(X)
