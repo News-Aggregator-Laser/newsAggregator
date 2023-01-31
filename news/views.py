@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Count
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import *
 from json import dumps
 import pandas as pd
@@ -132,12 +132,14 @@ def category(request, category: str):
 
 
 def article(request, article_id: int):
+    articles = News.objects.get(id=article_id, is_archived=False, news_author__is_active=True, news_provider__is_active=True)
     return render(
         request,
         "article_details.html",
         {
             **_common_vars(request.user.is_anonymous),
-            "article": News.objects.get(id=article_id, is_archived=False, news_author__is_active=True, news_provider__is_active=True),
+            "article": articles,
+            'page_url': request.build_absolute_uri(),
         },
     )
 
