@@ -155,4 +155,5 @@ if (_articles_container || _history_articles_container) {
     toggleSearch();
     toggleFilter();
     render_news(articles);
+    checkImages();
 }
