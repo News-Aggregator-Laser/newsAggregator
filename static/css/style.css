@@ -455,7 +455,7 @@ header .logo-cont {
 }
 
 .top-category-news .category-title {
-    width: 50%;
+    width: 60%;
 }
 
 .top-category-news .category-title h1 {
@@ -475,30 +475,17 @@ header .logo-cont {
     color: var(--main-font-color);
 }
 
-.top-category-news a:hover {
-    text-decoration: underline;
-}
-
 
 /*====== Category Swiper ======*/
 .category-swiper {
-    width: 50%;
+    width: 60%;
     height: 100%;
-}
-
-.category-swiper-slide {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-direction: row;
-    gap: 15px;
 }
 
 .category-swiper-slide img {
     width: 40%;
     height: 100%;
+    background-color: #000;
 }
 
 .category-swiper-slide .article-info {
@@ -519,9 +506,10 @@ header .logo-cont {
 }
 
 .category-swiper-pagination {
-    display: flex;
-    justify-content: flex-start;
-    background-color: rgba(255, 255, 255, 0) !important;
+    background-color: rgba(0, 0, 0, 0) !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    width: 60% !important;
 }
 
 .swiper-pagination-bullet-active {
@@ -567,6 +555,11 @@ header .logo-cont {
     align-items: center;
     justify-content: flex-start;
     gap: 10px;
+}
+
+.article-share-btns a {
+    color: var(--main-font-color);
+    text-decoration: none;
 }
 
 .social-btn {

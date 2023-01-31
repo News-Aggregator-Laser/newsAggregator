@@ -1,4 +1,3 @@
-from time import sleep
 from scheduled_services.services.db_cleaner import DbCleaner
 from scheduled_services.services.email_service import EmailService
 from scheduled_services.services.services_scheduler import ServicesScheduler
@@ -16,8 +15,8 @@ class ScheduledServices:
         self._need_to_restart = False
 
     def _check_for_restart(self):
-        print("========== Restarting =========")
         if self._need_to_restart:
+            print("========== Restarting =========")
             self._need_to_restart = False
             self.stop()
             self.run()
