@@ -22,14 +22,12 @@ def normalize_author(author):
 
 
 def normalize_source(source):
-    # Use a regular expression to extract only the relevant parts of the source name
-    match = re.search(r'([\w\s]+),?\s*(.*)', source)
-    if match:
-        first_part, second_part = match.groups()
-        # Normalize the source name to lowercase
-        return f'{first_part.lower()} {second_part.lower()}'.strip()
-    else:
-        return source.lower()
+    # Remove all non-word characters from the provider name
+    provider = re.sub(r'(\.)+(com|org|net|edu)', '', source.strip())
+    # remove subdomains
+    provider = re.sub(r'(\w)+(\.)', '', provider.strip())
+    # Convert the provider name to capitalize
+    return provider.capitalize()
 
 
 def _parse_list_str(list_str: str) -> list[str]:

@@ -61,11 +61,9 @@ class News(models.Model):
     url_image = models.URLField()
     news_provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
     news_source = models.ForeignKey(NewsSource, on_delete=models.CASCADE)
-    # news_source = models.CharField(max_length=100, null=True)
     source = models.URLField()
     news_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     news_author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    # news_author = models.CharField(max_length=100, null=True)
     is_top_in_category = models.BooleanField(default=False)
     is_top_news = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
@@ -97,7 +95,7 @@ class ReadLater(models.Model):
 
 
 class CMS(models.Model):
-    logo = models.URLField()
+    logo = models.ImageField(upload_to="svgs/")
     footer_title = models.CharField(max_length=50)
     footer_description = models.CharField(max_length=150)
     category1 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category1")
@@ -109,6 +107,15 @@ class CMS(models.Model):
     instagram_url = models.URLField(default=None)
     facebook_url = models.URLField(default=None)
     twitter_url = models.URLField(default=None)
+
+    def save(self, *args, **kwargs):
+        try:
+            old_image = CMS.objects.get(pk=self.pk).logo
+        except CMS.DoesNotExist:
+            old_image = None
+        if old_image and old_image != self.logo:
+            old_image.delete(save=False)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "CMS"

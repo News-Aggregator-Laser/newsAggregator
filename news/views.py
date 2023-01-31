@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Count
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import *
 from json import dumps
 import pandas as pd
@@ -76,7 +76,7 @@ def _encode_article(article: News) -> dict:
         "publish_date": str(article.publish_date),
         "url_image": article.url_image,
         "news_category": article.news_category.name,
-        "news_author": article.news_author,
+        "news_author": article.news_author.name,
         "readLater": article.readLater if article.readLater else False,
         "favorite": article.favorite if article.favorite else False,
     }
@@ -91,17 +91,16 @@ def _news_to_json(news) -> str:
 def home(request):
     common_vars = _common_vars(request.user.is_anonymous)
     # top news (for main slider)
-    top_news = News.objects.all().filter(is_archived=False, news_author__is_active=True, news_provider__is_active=True).order_by("-publish_date")[:10]
+    top_news = News.objects.all().filter(is_archived=False, news_author__is_active=True, news_source__is_active=True).order_by("-publish_date")[:10]
     # top news in each selected category
     top_categories_news = {
         category: News.objects.filter(is_top_in_category=True, news_category=category, is_archived=False, news_author__is_active=True,
-                                      news_provider__is_active=True)
+                                      news_source__is_active=True)
         for category in common_vars["selected_categories"]
     }
-    popular_news = News.objects.all().filter(is_archived=False, news_author__is_active=True, news_provider__is_active=True).order_by("-publish_date")[
+    popular_news = News.objects.all().filter(is_archived=False, news_author__is_active=True, news_source__is_active=True).order_by("-publish_date")[
                    :10]
-    if not request.user.is_anonymous:
-        popular_news = _add_read_later_like_to_news(popular_news, request.user)
+    popular_news = _add_read_later_like_to_news(popular_news, request.user)
     return render(
         request,
         "index.html",
@@ -116,9 +115,8 @@ def home(request):
 
 def category(request, category: str):
     category_news = News.objects.filter(news_category=Category.objects.get(name=category), is_archived=False, news_author__is_active=True,
-                                        news_provider__is_active=True)[:20]
-    if not request.user.is_anonymous:
-        category_news = _add_read_later_like_to_news(category_news, request.user)
+                                        news_source__is_active=True)[:20]
+    category_news = _add_read_later_like_to_news(category_news, request.user)
     return render(
         request,
         "news_list.html",
@@ -132,12 +130,14 @@ def category(request, category: str):
 
 
 def article(request, article_id: int):
+    articles = News.objects.get(id=article_id, is_archived=False, news_author__is_active=True, news_source__is_active=True)
     return render(
         request,
         "article_details.html",
         {
             **_common_vars(request.user.is_anonymous),
-            "article": News.objects.get(id=article_id, is_archived=False, news_author__is_active=True, news_provider__is_active=True),
+            "article": articles,
+            'page_url': request.build_absolute_uri(),
         },
     )
 
@@ -145,10 +145,9 @@ def article(request, article_id: int):
 @authenticated_required
 def read_later(request):
     read_later = ReadLater.objects.filter(user=request.user, is_removed=False, news__is_archived=False, news__news_author__is_active=True,
-                                          news__news_provider__is_active=True).values_list("news_id", flat=True)
+                                          news__news_source__is_active=True).values_list("news_id", flat=True)
     read_later_news = News.objects.filter(id__in=read_later)
-    for article in read_later_news:
-        article.readLater = True
+    _add_read_later_like_to_news(read_later_news, request.user)
     return render(
         request,
         "news_list.html",
@@ -163,7 +162,7 @@ def read_later(request):
 @authenticated_required
 def history(request):
     history = History.objects.filter(user=request.user, is_removed=False, news__is_archived=False, news__news_author__is_active=True,
-                                     news__news_provider__is_active=True).values_list("news_id", flat=True)
+                                     news__news_source__is_active=True).values_list("news_id", flat=True)
     history_news = News.objects.filter(id__in=history)
     history_news = _add_read_later_like_to_news(history_news, request.user)
     return render(
@@ -179,7 +178,7 @@ def history(request):
 
 @authenticated_required
 def favorite(request):
-    favorite = Like.objects.filter(user=request.user, is_removed=False, news__is_archived=False, news__news_provider__is_active=True,
+    favorite = Like.objects.filter(user=request.user, is_removed=False, news__is_archived=False, news__news_source__is_active=True,
                                    news__news_author__is_active=True).values_list("news_id", flat=True)
     favorite_news = News.objects.filter(id__in=favorite)
     favorite_news = _add_read_later_like_to_news(favorite_news, request.user)
@@ -201,12 +200,13 @@ def your_feed(request):
     recent_news_set = recent_liked_news | recent_unliked_news
     # Load the data
     ten_days_ago = datetime.now() - timedelta(days=1000)
-    news_data = News.objects.filter(publish_date__gt=ten_days_ago).values('id', 'title', 'subtitle', 'content', 'news_category__name', 'news_author')
+    news_data = News.objects.filter(publish_date__gt=ten_days_ago).values('id', 'title', 'subtitle', 'content', 'news_category__name',
+                                                                          'news_author__name')
     df = pd.DataFrame.from_records(news_data)
     # Define the vectorizer
     vectorizer = TfidfVectorizer()
     # Extract the features
-    df['concatenated_fields'] = df['title'].str.cat(df[['subtitle', 'content', 'news_category__name', 'news_author']], sep=' ')
+    df['concatenated_fields'] = df['title'].str.cat(df[['subtitle', 'content', 'news_category__name', 'news_author__name']], sep=' ')
     X = vectorizer.fit_transform(df['concatenated_fields'])
     # Compute the similarity matrix
     similarity = cosine_similarity(X)
