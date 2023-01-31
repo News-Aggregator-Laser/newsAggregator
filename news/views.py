@@ -76,7 +76,7 @@ def _encode_article(article: News) -> dict:
         "publish_date": str(article.publish_date),
         "url_image": article.url_image,
         "news_category": article.news_category.name,
-        "news_author": article.news_author,
+        "news_author": article.news_author.name,
         "readLater": article.readLater if article.readLater else False,
         "favorite": article.favorite if article.favorite else False,
     }
@@ -100,8 +100,7 @@ def home(request):
     }
     popular_news = News.objects.all().filter(is_archived=False, news_author__is_active=True, news_source__is_active=True).order_by("-publish_date")[
                    :10]
-    if not request.user.is_anonymous:
-        popular_news = _add_read_later_like_to_news(popular_news, request.user)
+    popular_news = _add_read_later_like_to_news(popular_news, request.user)
     return render(
         request,
         "index.html",
@@ -117,8 +116,7 @@ def home(request):
 def category(request, category: str):
     category_news = News.objects.filter(news_category=Category.objects.get(name=category), is_archived=False, news_author__is_active=True,
                                         news_source__is_active=True)[:20]
-    if not request.user.is_anonymous:
-        category_news = _add_read_later_like_to_news(category_news, request.user)
+    category_news = _add_read_later_like_to_news(category_news, request.user)
     return render(
         request,
         "news_list.html",
