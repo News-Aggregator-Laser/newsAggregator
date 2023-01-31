@@ -65,7 +65,7 @@ function _generate_history_article_component(article) {
 function _generate_empty_page_content() {
     return `
     <section style="width: 100%; height: 100%; display: grid; place-items: center;">
-        <h2>Sorry! Nothing to show here...</h2>
+        <h2 style="color: rgba(0, 0, 0, 0.6)">Nothing to show here</h2>
     </section>
     `
 }
