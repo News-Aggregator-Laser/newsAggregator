@@ -25,14 +25,14 @@ class EmailService:
         print("Emails service is running...")
         website = "http://localhost:8000/article/"
         # loop over subscribers and send emails
-        subscribers = Subscription.objects.filter(is_subscribed=True)
-        news = get_most_trending_news(1)
+        subscribers = Subscription.objects.all().filter(is_subscribed=True)
+        news = get_most_trending_news(1).values()[0]
         for subscriber in subscribers:
             unsubscribe = encode(subscriber.email)
             to_email = subscriber.email
             subject = "Laser News"
             from_email = "email@gmail.com"
-            message = news.title + "\n" + news.description + "\n" + website + str(news.id)
-            html_message = '<h1>' + news.title + '</h1>' + '<p>' + news.description + '</p>' + '<a href="' + website + str(
-                news.id) + '">Read more</a>' + '<br><br><a href="http://localhost:8000/unsubscribe/' + unsubscribe + '">Unsubscribe</a>'
+            message = news['title'] + "\n" + news['content'] + "\nRead More " + website + str(news['id'])
+            html_message = '<h1>' + news['title'] + '</h1>' + '<p>' + news['content'] + '</p>' + '<a href="' + website + str(
+                news['id']) + '">Read more</a>' + '<br><br><a href="http://localhost:8000/unsubscribe/' + unsubscribe + '">Unsubscribe</a>'
             send_mail(subject, message, from_email, [to_email], html_message=html_message)
