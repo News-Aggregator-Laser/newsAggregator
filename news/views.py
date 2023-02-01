@@ -1,6 +1,8 @@
+from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Count
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from json import dumps
 import pandas as pd
@@ -88,6 +90,19 @@ def _news_to_json(news) -> str:
 
 
 # ==================== End Points ====================#
+
+def registration(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+
 def home(request):
     common_vars = _common_vars(request.user.is_anonymous)
     # top news (for main slider)
