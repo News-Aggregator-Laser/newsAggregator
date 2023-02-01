@@ -2,7 +2,7 @@
     <div class="swiper-wrapper top-swiper-wrapper">
         {% for article in top_news %}
             <div class="swiper-slide top-swiper-slide">
-                <a href="#">
+                <a href="article/{{ article.id }}">
                     <img src="{{ article.url_image }}" alt="{{ article.title }}">
                 </a>
                 <div class="article-info">
