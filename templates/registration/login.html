@@ -12,7 +12,12 @@
         <input type="password" placeholder="Password" name="password">
         <button>Log In</button>
         <div class="social">
-            <div class="go"><i></i> Dont have an account. sign up.</div>
+            <a  href="/registration">
+                <div class="go"> Dont have an account. sign up.</div>
+            </a>
         </div>
+        {% if form.errors %}
+            <p style="text-align: center">Your username and password didn't match. Please try again.</p>
+        {% endif %}
     </form>
 {% endblock %}
