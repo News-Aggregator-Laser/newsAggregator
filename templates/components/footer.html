@@ -5,7 +5,8 @@
         <h1 class="subscribe-text">Subscribe to our newsletter</h1>
         <p class="subscribe-subtext">Get boring news day by day :)</p>
         <div class="form-container">
-            <input type="text" placeholder="Email Address" id="email-input" class="email-input" style="background-color:black;">
+            <input type="text" placeholder="Email Address" id="email-input" class="email-input"
+                style="background-color:black;">
             <button id="subscribe-button" class="subscribe-button">Subscribe</button>
         </div>
     </div>
@@ -21,40 +22,11 @@
             </div>
             <div class="category-container">
                 <h2 class="category-text">Categories</h2>
+                {% for category in all_categories %}
                 <div class="category">
-                    <h4><a href="#">{{ selected_categories.0 }}</a></h4>
+                    <h4><a href="/category/{{ category }}">{{ category }}</a></h4>
                 </div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.1 }}</a></h4>
-                </div>
-                <div class="clear"></div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.2 }}</a></h4>
-                </div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.3 }}</a></h4>
-                </div>
-                <div class="clear"></div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.4 }}</a></h4>
-                </div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.5 }}</a></h4>
-                </div>
-                <div class="clear"></div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.6 }}</a></h4>
-                </div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.7 }}</a></h4>
-                </div>
-                <div class="clear"></div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.8 }}</a></h4>
-                </div>
-                <div class="category">
-                    <h4><a href="#">{{ selected_categories.9 }}</a></h4>
-                </div>
+                {% endfor %}
             </div>
             <div class="col-3">
                 <h2>Follow us</h2>
