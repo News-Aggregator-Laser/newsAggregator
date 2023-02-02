@@ -41,9 +41,9 @@
     <div class="search-cont">
         <div class="search-box">
             <i class="bi bi-search"></i>
-            <input type="text" placeholder="Search...">
+            <input type="text" placeholder="Search..." id="searchInput">
             <button type="submit">
-                <h4>Search</h4>
+                <a style="text-decoration: none; color: white"  href="/search?q=" id="searchLink"><h4>Search</h4></a>
             </button>
         </div>
     </div>
@@ -79,3 +79,11 @@
         </ul>
     </div>
 </header>
+<script>
+    const inputElement = document.getElementById("searchInput");
+    const linkElement = document.getElementById("searchLink");
+
+    inputElement.addEventListener("input", function () {
+        linkElement.setAttribute("href", "/search?q=" + inputElement.value);
+    });
+</script>
