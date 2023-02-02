@@ -98,12 +98,24 @@ class CMS(models.Model):
     logo = models.ImageField(upload_to="static/svgs/")
     footer_title = models.CharField(max_length=50)
     footer_description = models.CharField(max_length=150)
-    category1 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category1")
-    category2 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category2")
-    category3 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category3")
-    category4 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category4")
-    category5 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category5")
-    category6 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category6")
+    category1 = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="featured_category1"
+    )
+    category2 = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="featured_category2"
+    )
+    category3 = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="featured_category3"
+    )
+    category4 = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="featured_category4"
+    )
+    category5 = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="featured_category5"
+    )
+    category6 = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="featured_category6"
+    )
     instagram_url = models.URLField(default=None)
     facebook_url = models.URLField(default=None)
     twitter_url = models.URLField(default=None)
@@ -140,3 +152,11 @@ class Like(models.Model):
 class Subscription(models.Model):
     email = models.EmailField(db_index=True)
     is_subscribed = models.BooleanField(default=True)
+
+
+class Tags(models.Model):
+    tag = models.CharField(max_length=50, db_index=True)
+    news = models.ForeignKey(News, on_delete=models.CASCADE, db_index=True)
+
+    def __str__(self) -> str:
+        return self.name

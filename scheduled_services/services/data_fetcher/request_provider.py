@@ -7,25 +7,26 @@ from jsonpath_ng import parse
 
 from django.db import IntegrityError
 
-from news.models import Author, NewsSource
+from news.models import Author, NewsSource, Tags
+from ml_logic.tags_extractor import extract_tags
 
 
 def normalize_author(author):
     # Use a regular expression to extract only the first and last name
-    match = re.search(r'(\w+)[\s\.]+(\w+)', author)
+    match = re.search(r"(\w+)[\s\.]+(\w+)", author)
     if match:
         first_name, last_name = match.groups()
         # Normalize the author name to lowercase
-        return f'{first_name.lower()} {last_name.lower()}'
+        return f"{first_name.lower()} {last_name.lower()}"
     else:
         return author.lower()
 
 
 def normalize_source(source):
     # Remove all non-word characters from the provider name
-    provider = re.sub(r'(\.)+(com|org|net|edu)', '', source.strip())
+    provider = re.sub(r"(\.)+(com|org|net|edu)", "", source.strip())
     # remove subdomains
-    provider = re.sub(r'(\w)+(\.)', '', provider.strip())
+    provider = re.sub(r"(\w)+(\.)", "", provider.strip())
     # Convert the provider name to capitalize
     return provider.capitalize()
 
@@ -169,6 +170,14 @@ class RequestProvider:
             )
             try:
                 news_m.save()
+                # extract tags and save them
+                print(f"Generating tag for a new article: {news_m.id}:")
+                tags = extract_tags(title).union(extract_tags(sub_title))
+                print(f"\t{tags}", end="... ")
+                for tag in tags:
+                    Tags.objects.create(news=news_m, tag=tag)
+                print("Done")
+
             except IntegrityError:
                 pass
 
