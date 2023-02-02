@@ -156,4 +156,11 @@ if (_articles_container || _history_articles_container) {
     toggleFilter();
     render_news(articles);
     checkImages();
+    // ========== Handle active menu ========== //
+    function handleActiveFilterBox() {
+        if (filter_box.style.display === 'block') {
+            toggleFilter();
+        }
+    }
+    document.body.addEventListener("click", handleActiveFilterBox, true);
 }

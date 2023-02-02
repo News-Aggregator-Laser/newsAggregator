@@ -86,3 +86,12 @@ function checkImages() {
 }
 
 checkImages();
+
+// ========== Handle active menu ========== //
+function handleActiveMenu() {
+    const menu = document.querySelector(".menu");
+    if (menu.style.display === 'flex') {
+        toggleMenu();
+    }
+}
+document.body.addEventListener("click", handleActiveMenu, true);
