@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import UserCreationForm
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from json import dumps
@@ -264,6 +264,39 @@ def favorite(request):
             **_common_vars(request.user.is_anonymous),
             "news": _news_to_json(favorite_news),
             "title": "Favorite",
+        },
+    )
+
+
+def search(request):
+    if request.method == "GET":
+        search_query = request.GET.get("q")
+        if search_query:
+            search_results = News.objects.filter(
+                Q(title__icontains=search_query)
+                | Q(subtitle__icontains=search_query)
+                | Q(content__icontains=search_query),
+                is_archived=False,
+                news_author__is_active=True,
+                news_source__is_active=True,
+            )[:20]
+            search_results = _add_read_later_like_to_news(search_results, request.user)
+            return render(
+                request,
+                "news_list.html",
+                {
+                    **_common_vars(request.user.is_anonymous),
+                    "news": _news_to_json(search_results),
+                    "title": "Search Results",
+                },
+            )
+    return render(
+        request,
+        "news_list.html",
+        {
+            **_common_vars(request.user.is_anonymous),
+            "news": [],
+            "title": "Search Results",
         },
     )
 

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, category, article, read_later, history, your_feed, favorite, registration, author
+from .views import home, category, article, read_later, history, your_feed, favorite, registration, author, search
 
 urlpatterns = [
     path("", home),
@@ -11,4 +11,5 @@ urlpatterns = [
     path("your_feed/", your_feed),
     path("favorite/", favorite),
     path("registration/", registration),
+    path("search/", search)
 ]
