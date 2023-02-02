@@ -3,13 +3,14 @@
         <h1>{{ category }}</h1>
         <h3><a href="/category/{{ category.name }}">View All >></a></h3>
     </div>
-    <div class="swiper category-swiper">
+    <div class="swiper category-swiper" style="position: relative !important;">
+        <div style="position: absolute !important; bottom:0 !important;right: 50% !important;"
+             class="swiper-pagination category-swiper-pagination"></div>
         <div class="swiper-wrapper category-swiper-wrapper">
             {% for article in articles %}
-            <div class="swiper-slide category-swiper-slide">
-                {% include "components/article.html" %}
-                <div class="swiper-pagination category-swiper-pagination"></div>
-            </div>
+                <div class="swiper-slide category-swiper-slide">
+                    {% include "components/article.html" %}
+                </div>
             {% endfor %}
         </div>
     </div>
