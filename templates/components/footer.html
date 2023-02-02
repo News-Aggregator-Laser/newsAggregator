@@ -6,14 +6,14 @@
         <p class="subscribe-subtext">Get boring news day by day :)</p>
         <div class="form-container">
             <input type="text" placeholder="Email Address" id="email-input" class="email-input"
-                style="background-color:black;">
+                   style="background-color:black;">
             <button id="subscribe-button" class="subscribe-button">Subscribe</button>
         </div>
     </div>
     <div class="info-section">
         <div class="container">
             <div class="col-1">
-                <img class="logo-svg" src="{% static 'svgs/logo.svg' %}" alt="our very nice logo ;)">
+                <img class="logo-svg" src="{{ cms.logo }}" alt="our very nice logo ;)">
                 <p class="logo-text">
                 <h3>{{ cms.title }}</h3>
                 {{ cms.description }}
@@ -23,9 +23,9 @@
             <div class="category-container">
                 <h2 class="category-text">Categories</h2>
                 {% for category in all_categories %}
-                <div class="category">
-                    <h4><a href="/category/{{ category }}">{{ category }}</a></h4>
-                </div>
+                    <div class="category">
+                        <h4><a href="/category/{{ category }}">{{ category }}</a></h4>
+                    </div>
                 {% endfor %}
             </div>
             <div class="col-3">

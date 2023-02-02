@@ -95,7 +95,7 @@ class ReadLater(models.Model):
 
 
 class CMS(models.Model):
-    logo = models.ImageField(upload_to="svgs/")
+    logo = models.ImageField(upload_to="static/svgs/")
     footer_title = models.CharField(max_length=50)
     footer_description = models.CharField(max_length=150)
     category1 = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="featured_category1")
