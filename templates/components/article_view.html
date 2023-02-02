@@ -12,16 +12,17 @@
             <h3> {{ article.subtitle }} </h3>
             <br>
             {% if article.news_author.name == "unknown" %}
-            <p class="author-and-date">{{ article.publish_date }}</p>
+                <p class="author-and-date">{{ article.publish_date }}</p>
             {% else %}
-            <p class="author-and-date">By {{ article.news_author }} <br> {{ article.publish_date }}</p>
+                <p class="author-and-date">By <a href="/author/{{ article.news_author }}">{{ article.news_author }}</a>
+                    <br> {{ article.publish_date }}</p>
             {% endif %}
             <br>
             <div class="article-content">
                 {{ article.content }}
                 <br>
                 <br>
-                <u>source</u>: <a href="{{ article.source }}">{{ article.news_source }}</a>
+                <u>source</u>: <a target="_blank" href="{{ article.source }}">{{ article.news_source }}</a>
             </div>
         </div>
 
@@ -32,17 +33,17 @@
         <h3>Share on Social media</h3>
         <div class="article-share-btns">
             {% with page_url=page_url %}
-            {% post_to_facebook object_or_url "<i class='bi bi-facebook social-btn fb-btn'></i>" "{{article.title}}." %}
-            {% post_to_twitter "{{article.title}}." object_or_url "<i class='bi bi-twitter social-btn twt-btn'></i>" %}
-            {% post_to_whatsapp object_or_url "<i class='bi bi-whatsapp social-btn wh.btn'></i>" %}
+                {% post_to_facebook object_or_url "<i class='bi bi-facebook social-btn fb-btn'></i>" "{{article.title}}." %}
+                {% post_to_twitter "{{article.title}}." object_or_url "<i class='bi bi-twitter social-btn twt-btn'></i>" %}
+                {% post_to_whatsapp object_or_url "<i class='bi bi-whatsapp social-btn wh.btn'></i>" %}
             {% endwith %}
         </div>
     </div>
     <script>
-        const data = { 'news': {{ article.id }},};
+        const data = {'news': {{ article.id }},};
         fetch(`/history/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', "X-CSRFToken": csrftoken },
+            headers: {'Content-Type': 'application/json', "X-CSRFToken": csrftoken},
             body: JSON.stringify(data),
         })
             .then(response => response.json())
