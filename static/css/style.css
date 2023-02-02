@@ -537,7 +537,7 @@ header .logo-cont {
     margin: 1vh 2vw;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 1.5rem;
 }
 
 .article-view-cont .category {
@@ -548,6 +548,58 @@ header .logo-cont {
     color: var(--main-bg-color);
     width: fit-content;
 }
+
+.article-view-cont .category a {
+    font-size: 0.9rem;
+    color: var(--main-bg-color);
+    text-decoration: none;
+}
+
+.article-view-cont .article-details-cont .img-cont {
+    max-width: 50%;
+    max-height: 60%;
+    min-width: 35%;
+    min-height: 300px;
+    border-radius: 5px;
+    background-color: var(--main-font-color);
+    display: inline-block;
+    float: right;
+    margin: 0 0 30px 30px;
+    position: relative;
+}
+
+.article-view-cont .article-details-cont .img-cont img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.article-view-cont .article-details-cont h3 {
+    font-weight: 600;
+}
+
+.article-view-cont .article-details-cont .article-content {
+    font-size: 1.3rem;
+    line-height: 1.5;
+}
+
+.article-view-cont .article-details-cont .article-content a {
+    color: var(--main-font-color);
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.article-view-cont .article-details-cont .article-content a:hover {
+    text-decoration: underline;
+}
+
+.article-view-cont .article-details-cont .author-and-date {
+    border-left: 3px solid var(--main-font-color);
+    padding-left: 5px;
+    margin: 5px 0px;
+    font-weight: 600;
+}
+
 
 .article-share-btns {
     margin-left: 15px;
@@ -606,7 +658,7 @@ header .logo-cont {
     background-color: var(--main-font-color);
     color: #fff;
     font-size: 1rem;
-    padding: 0px 8px;
+    padding: 1px 7px;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -672,6 +724,7 @@ footer {
     align-items: center;
     flex-direction: column;
     gap: 10px;
+    padding: 8px;
 
 }
 
