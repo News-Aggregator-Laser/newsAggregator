@@ -34,7 +34,7 @@ def _common_vars(is_anonymous) -> dict:
         ],
         "all_categories": Category.objects.all().filter(is_active=True),
         "cms": {
-            "logo": CMS.objects.first().logo,
+            "logo": "../"+str(CMS.objects.first().logo),
             "title": CMS.objects.first().footer_title,
             "description": CMS.objects.first().footer_description,
             "facebook": CMS.objects.first().facebook_url,
