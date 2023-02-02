@@ -34,7 +34,7 @@ def _common_vars(is_anonymous) -> dict:
         ],
         "all_categories": Category.objects.all().filter(is_active=True),
         "cms": {
-            "logo": CMS.objects.first().logo,
+            "logo": "../" + str(CMS.objects.first().logo),
             "title": CMS.objects.first().footer_title,
             "description": CMS.objects.first().footer_description,
             "facebook": CMS.objects.first().facebook_url,
@@ -160,6 +160,26 @@ def category(request, category: str):
             "category": category,
             "news": _news_to_json(category_news),
             "title": category + " News",
+        },
+    )
+
+
+def author(request, author: str):
+    author_news = News.objects.filter(
+        news_author=Author.objects.get(name=author),
+        is_archived=False,
+        news_author__is_active=True,
+        news_source__is_active=True,
+    )[:20]
+    category_news = _add_read_later_like_to_news(author_news, request.user)
+    return render(
+        request,
+        "news_list.html",
+        {
+            **_common_vars(request.user.is_anonymous),
+            "category": author,
+            "news": _news_to_json(category_news),
+            "title": author + " News",
         },
     )
 
