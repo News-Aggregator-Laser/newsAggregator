@@ -159,4 +159,7 @@ class Tags(models.Model):
     news = models.ForeignKey(News, on_delete=models.CASCADE, db_index=True)
 
     def __str__(self) -> str:
-        return self.name
+        return self.tag
+
+    class Meta:
+        verbose_name_plural = "Tags"
