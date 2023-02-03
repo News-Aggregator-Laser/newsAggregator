@@ -83,7 +83,7 @@ def _encode_article(article: News) -> dict:
 
 def _news_to_json(news) -> str:
     """encode the list of news to json (to parse it in client side)"""
-    return dumps([_encode_article(article) for article in set(news)])
+    return dumps([_encode_article(article) for article in news])
 
 
 def _get_recent_liked_news(user_id: int, limit: int = 10) -> list[News]:
@@ -326,6 +326,16 @@ def your_feed(request):
     history_news = _get_recent_news_from_history(request.user.id, 20)
     suggestions = generate_suggestions(list(recent_liked_news) + list(history_news), 20)
 
+    if not suggestions:
+        suggestions = (
+            News.objects.all()
+            .filter(
+                is_archived=False,
+                news_author__is_active=True,
+                news_source__is_active=True,
+            )
+            .order_by("-publish_date")[:10]
+        )
     return render(
         request,
         "news_list.html",

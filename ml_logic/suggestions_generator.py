@@ -54,11 +54,11 @@ class NewsPreciser:
     def __init__(self) -> None:
         self._news = {}
 
-    def add(self, news: News):
+    def add(self, news: News, match: float = 0.1):
         if news in self._news:
-            self._news[news] += 0.1
+            self._news[news] += match
         else:
-            self._news[news] = 0.1
+            self._news[news] = match
 
     def get_sorted(self):
         return sorted(self._news.items(), key=lambda x: x[1], reverse=True)
@@ -71,9 +71,9 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
 
     for news in history:
         # --- (1) get news with the same category ---#
-        for sim_news in _get_news_with_same_category(news.news_category, 10):
+        for sim_news in _get_news_with_same_category(news.news_category, 30):
             if sim_news not in history:
-                suggestions.add(sim_news)
+                suggestions.add(sim_news, match=0.4)
 
         # --- (2) get news with similar category ---#
         category = news.news_category.name
@@ -81,7 +81,7 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
             for sim_cat_name in CATEGORIES_MAP[category]:
                 sim_cat: Category | None = _get_category_from_name(sim_cat_name)
                 if sim_cat is not None:
-                    for sim_news in _get_news_with_same_category(sim_cat, 5):
+                    for sim_news in _get_news_with_same_category(sim_cat, 10):
                         if sim_news not in history:
                             suggestions.add(sim_news)
 
@@ -90,7 +90,7 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
         for tag in news_tags:
             for sim_news in _get_news_with_similar_tag(tag):
                 if sim_news not in history:
-                    suggestions.add(sim_news)
+                    suggestions.add(sim_news, match=0.2)
 
     # ----- output -----#
     for k, v in suggestions.get_sorted():

@@ -16,7 +16,7 @@ function _generate_article_component(article) {
     return `
     <div class="article">
         <div class="article-info-cont">
-            <h3><a href="/article/${article.id}">${_truncate_text(article.title, 150)}</a></h3>
+            <h3><a href="/article/${article.id}">${_truncate_text(article.title, 120)}</a></h3>
             <p>${_truncate_text(article.subtitle, 150)}</p>
             <br>
         </div>
@@ -47,7 +47,7 @@ function _generate_history_article_component(article) {
     return `
     <div class="article">
         <div class="article-info-cont">
-            <h3><a href="/article/${article.id}">${_truncate_text(article.title, 150)}</a></h3>
+            <h3><a href="/article/${article.id}">${_truncate_text(article.title, 120)}</a></h3>
             <p>${_truncate_text(article.subtitle, 150)}</p>
             <br>
         </div>
