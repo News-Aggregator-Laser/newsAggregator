@@ -13,7 +13,6 @@ django.setup()
 from news.models import News, Tags
 
 
-from scheduled_services.services.tags_extractor import extract_tags
 from ml_logic.tags_extractor import extract_tags
 
 
