@@ -306,7 +306,7 @@ def search(request):
                 {
                     **_common_vars(request.user.is_anonymous),
                     "news": _news_to_json(search_results),
-                    "title": "Search Results",
+                    "title": f"Results for '{search_query}'",
                 },
             )
     return render(

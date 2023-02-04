@@ -2,12 +2,15 @@ import spacy
 from news.models import News, Category, Tags
 from time import time
 
+SAME_CATEGORY_MATCH = 0.5
+SIMILAR_CATEGORY_MATCH = 0.1
+SIMILAR_TAG_MATCH = 0.2
+
 CATEGORIES_MAP: dict[str, list[str]] = {
     # health wa 2a5awatouha
-    "health": ["sports", "environment", "food"],
-    "sports": ["health", "environment", "food"],
-    "environment": ["sports", "health", "food"],
-    "food": ["sports", "environment", "health"],
+    "health": ["environment", "food"],
+    "environment": ["health", "food"],
+    "food": ["environment", "health"],
     # buisness wa 2a5awatouha
     "business": ["world", "technology", "politics"],
     "world": ["business", "technology", "politics"],
@@ -73,7 +76,7 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
         # --- (1) get news with the same category ---#
         for sim_news in _get_news_with_same_category(news.news_category, 30):
             if sim_news not in history:
-                suggestions.add(sim_news, match=0.4)
+                suggestions.add(sim_news, match=SAME_CATEGORY_MATCH)
 
         # --- (2) get news with similar category ---#
         category = news.news_category.name
@@ -83,14 +86,14 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
                 if sim_cat is not None:
                     for sim_news in _get_news_with_same_category(sim_cat, 10):
                         if sim_news not in history:
-                            suggestions.add(sim_news)
+                            suggestions.add(sim_news, match=SIMILAR_CATEGORY_MATCH)
 
         # --- (3) get news with similar tags ---#
         news_tags = Tags.objects.filter(news_id=news.id)
         for tag in news_tags:
             for sim_news in _get_news_with_similar_tag(tag):
                 if sim_news not in history:
-                    suggestions.add(sim_news, match=0.2)
+                    suggestions.add(sim_news, match=SIMILAR_TAG_MATCH)
 
     # ----- output -----#
     for k, v in suggestions.get_sorted():
