@@ -12,7 +12,6 @@ UNWANTED_LABELS = [
     "ORDINAL",
     "QUANTITY",
     "TIME",
-    "ORG",
 ]
 
 

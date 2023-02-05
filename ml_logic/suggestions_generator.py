@@ -4,7 +4,11 @@ from time import time
 
 SAME_CATEGORY_MATCH = 0.5
 SIMILAR_CATEGORY_MATCH = 0.1
-SIMILAR_TAG_MATCH = 0.2
+SIMILAR_TAG_MATCH = 0.3
+
+SAME_CATEGORY_COUNT = 30
+SIMILAR_CATEGORY_COUNT = 10
+
 
 CATEGORIES_MAP: dict[str, list[str]] = {
     # health wa 2a5awatouha
@@ -12,10 +16,9 @@ CATEGORIES_MAP: dict[str, list[str]] = {
     "environment": ["health", "food"],
     "food": ["environment", "health"],
     # buisness wa 2a5awatouha
-    "business": ["world", "technology", "politics"],
-    "world": ["business", "technology", "politics"],
-    "technology": ["business", "world", "politics"],
-    "politics": ["business", "world", "technology"],
+    "business": ["world", "politics"],
+    "world": ["business", "politics"],
+    "politics": ["business", "world"],
     # entertainment wa 2a5awatouha
     "entertainment": ["lifestyle", "travel", "fashion"],
     "lifestyle": ["entertainment", "travel", "fashion"],
@@ -74,7 +77,9 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
 
     for news in history:
         # --- (1) get news with the same category ---#
-        for sim_news in _get_news_with_same_category(news.news_category, 30):
+        for sim_news in _get_news_with_same_category(
+            news.news_category, SAME_CATEGORY_COUNT
+        ):
             if sim_news not in history:
                 suggestions.add(sim_news, match=SAME_CATEGORY_MATCH)
 
@@ -84,7 +89,9 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
             for sim_cat_name in CATEGORIES_MAP[category]:
                 sim_cat: Category | None = _get_category_from_name(sim_cat_name)
                 if sim_cat is not None:
-                    for sim_news in _get_news_with_same_category(sim_cat, 10):
+                    for sim_news in _get_news_with_same_category(
+                        sim_cat, SIMILAR_CATEGORY_COUNT
+                    ):
                         if sim_news not in history:
                             suggestions.add(sim_news, match=SIMILAR_CATEGORY_MATCH)
 
