@@ -1,4 +1,3 @@
-import spacy
 from news.models import News, Category, Tags
 from time import time
 
@@ -8,7 +7,6 @@ SIMILAR_TAG_MATCH = 0.3
 
 SAME_CATEGORY_COUNT = 30
 SIMILAR_CATEGORY_COUNT = 10
-
 
 CATEGORIES_MAP: dict[str, list[str]] = {
     # health wa 2a5awatouha
@@ -78,7 +76,7 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
     for news in history:
         # --- (1) get news with the same category ---#
         for sim_news in _get_news_with_same_category(
-            news.news_category, SAME_CATEGORY_COUNT
+                news.news_category, SAME_CATEGORY_COUNT
         ):
             if sim_news not in history:
                 suggestions.add(sim_news, match=SAME_CATEGORY_MATCH)
@@ -90,7 +88,7 @@ def generate_suggestions(history: list[News], limit: int = 20) -> list[News]:
                 sim_cat: Category | None = _get_category_from_name(sim_cat_name)
                 if sim_cat is not None:
                     for sim_news in _get_news_with_same_category(
-                        sim_cat, SIMILAR_CATEGORY_COUNT
+                            sim_cat, SIMILAR_CATEGORY_COUNT
                     ):
                         if sim_news not in history:
                             suggestions.add(sim_news, match=SIMILAR_CATEGORY_MATCH)

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('news', '0002_author_newssource_subscription_and_more'),
     ]

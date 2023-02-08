@@ -94,4 +94,5 @@ function handleActiveMenu() {
         toggleMenu();
     }
 }
+
 document.body.addEventListener("click", handleActiveMenu, true);

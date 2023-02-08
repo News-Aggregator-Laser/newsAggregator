@@ -1,12 +1,12 @@
-const removeFromHistoryButtons = document.querySelectorAll('.history-remove-btn');
-removeFromHistoryButtons.forEach(button => {
+const commentsButtons = document.querySelectorAll('.delete-button');
+commentsButtons.forEach(button => {
     button.addEventListener('click', () => {
-        const postId = button.getAttribute('data-post-id');
+        const commentId = button.getAttribute('comment-id');
         // Send the request
-        fetch(`/history/${postId}`, {
+        fetch(`/comment/${commentId}`, {
             method: 'delete',
             headers: {'Content-Type': 'application/json', "X-CSRFToken": csrftoken},
-            body: JSON.stringify({'news': postId}),
+            body: JSON.stringify({'news': commentId}),
 
         }).then(response => {
             // if request is successful (action is performed)

@@ -13,20 +13,20 @@ class ServicesScheduler:
 
     # ==================== Main scheduling functions ====================#
     def every_day_schedule(
-        self, task: "function", hour: str = "00", minute: str = "00"
+            self, task: "function", hour: str = "00", minute: str = "00"
     ):
         print(f"--> Scheduling '{task.__name__}' every day at {hour}:{minute}")
         schedule.every().day.at(f"{hour}:{minute}").do(task)
 
     def every_week_schedule(
-        self, task: "function", hour: str = "00", minute: str = "00"
+            self, task: "function", hour: str = "00", minute: str = "00"
     ):
         print(f"--> Scheduling '{task.__name__}' every sunday at {hour}:{minute}")
         schedule.every().sunday.at(f"{hour}:{minute}").do(task)
 
     # ==================== Providers scheduling functions ====================#
     def schedule_providers(
-        self, providers: list["RequestProvider"], debug: bool = False
+            self, providers: list["RequestProvider"], debug: bool = False
     ):
         for provider in providers:
             print(f"--> Scheduling '{provider._host}'...", end=" ")

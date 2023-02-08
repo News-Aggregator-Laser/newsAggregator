@@ -1,11 +1,13 @@
+from json import dumps
+
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Count, Q
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import *
-from json import dumps
+from django.shortcuts import render, redirect
+
 from ml_logic.suggestions_generator import generate_suggestions
+from .models import *
 
 
 def authenticated_required(function=None, redirect_url="login"):
@@ -204,22 +206,38 @@ def author(request, author: str):
 
 
 def article(request, article_id: int):
-    articles = News.objects.get(
-        id=article_id,
-        is_archived=False,
-        news_author__is_active=True,
-        news_source__is_active=True,
-    )
-    articles = _add_read_later_like_to_news([articles], request.user)[0]
-    return render(
-        request,
-        "article_details.html",
-        {
-            **_common_vars(request.user.is_anonymous),
-            "article": articles,
-            "page_url": request.build_absolute_uri(),
-        },
-    )
+    if request.method == "POST":
+        if request.user.is_anonymous:
+            return redirect("login")
+        comment = request.POST.get("comment")
+        comment = Comment.objects.create(user=request.user, news_id=article_id, content=comment)
+        comment.save()
+        return redirect("/article/" + str(article_id))
+    else:
+        articles = News.objects.get(
+            id=article_id,
+            is_archived=False,
+            news_author__is_active=True,
+            news_source__is_active=True,
+        )
+        articles = _add_read_later_like_to_news([articles], request.user)[0]
+        comments = Comment.objects.filter(news_id=article_id).values('id', 'user__username', 'content', 'created_at').order_by('-created_at')
+        for comment in comments:
+            if request.user.is_authenticated and request.user.username == comment['user__username']:
+                comment['is_user_comment'] = True
+            else:
+                comment['is_user_comment'] = False
+
+        return render(
+            request,
+            "article_details.html",
+            {
+                **_common_vars(request.user.is_anonymous),
+                "article": articles,
+                "page_url": request.build_absolute_uri(),
+                "comments": comments,
+            },
+        )
 
 
 @authenticated_required
