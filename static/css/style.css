@@ -309,7 +309,8 @@ header .logo-cont {
 }
 
 /* tooltip style*/
-.img-cont .interaction-btn-tooltip, .article .interaction-btn-tooltip {
+.img-cont .interaction-btn-tooltip,
+.article .interaction-btn-tooltip {
     visibility: hidden;
     width: 0;
     background-color: rgba(0, 0, 0, 0.7);
@@ -416,9 +417,9 @@ header .logo-cont {
 }
 
 .client-filter-box {
-    width: max-content;
+    width: fit-content;
     display: none;
-    height: 100px;
+    height: fit-content;
     border-radius: 10px;
     background-color: var(--accent-color);
     position: absolute;
@@ -429,9 +430,14 @@ header .logo-cont {
 }
 
 .client-filter-box form {
-    width: 100%;
+    width: 300px;
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.client-filter-box form select {
+    width: 50%;
 }
 
 

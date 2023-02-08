@@ -69,20 +69,37 @@ const category_swiper = new Swiper(".category-swiper", {
 
 
 // ========== Handle unloaded images ========== //
+all_images_are_loaded = false;
+
 function _isImageLoaded(img) {
     return img.complete && img.naturalHeight !== 0;
 }
 
 function checkImages() {
-    const images = document.querySelectorAll("img");
+    let tries = 0;
+    let check_interval = setInterval(() => {
+        console.log("Checking images...");
+        const images = document.querySelectorAll("img");
 
-    images.forEach((img) => {
-        if (!_isImageLoaded(img)) {
-            src = img.src;
-            console.log(`${src} is not loaded | reloading again...`);
-            img.src = src + '?' + new Date().getTime();
+        allLoaded = true;
+        images.forEach((img) => {
+            if (!_isImageLoaded(img)) {
+                allLoaded = false;
+                src = img.src;
+                console.log(`'${src}' is not loaded | reloading again...`);
+                img.src = src + '?' + new Date().getTime();
+            }
+        });
+        tries += 1;
+        if (allLoaded) {
+            clearInterval(check_interval);
+            console.log("All images are loaded!");
         }
-    });
+        if (tries > 5) {
+            clearInterval(check_interval);
+            console.log("Failed to load images after 5 tries!");
+        }
+    }, 5000);
 }
 
 checkImages();
