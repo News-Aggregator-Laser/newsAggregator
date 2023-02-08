@@ -4,20 +4,19 @@ This scripts extract all news from database and generate tags for those which do
 
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "newsAggregator.settings")
-
 import django
 
-django.setup()
-
 from news.models import News, Tags
-
 
 from ml_logic.tags_extractor import (
     extract_tags,
     _show_distinct_labels,
     _show_all_labels,
 )
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "newsAggregator.settings")
+
+django.setup()
 
 
 def show_distinct_labels(limit: int = 10):

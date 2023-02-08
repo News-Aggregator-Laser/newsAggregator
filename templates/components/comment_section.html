@@ -1,5 +1,6 @@
-<section class="comment-section">
+<section class="comment-section" id="comments">
     <form action="" id="comment-form" method="post">
+        {% csrf_token %}
         <h3>Leave your comment:</h3>
         <div class="comment-input-box">
             <input type="text" name="comment" id="comment-input" placeholder="Enter your comment">
@@ -13,8 +14,12 @@
         {% if comments %}
             {% for comment in comments %}
                 <div class="comment-box">
-                    <h3 class="comment-author">{{ comment.user }} - <span
+                    <h3 class="comment-author">{{ comment.user__username }} - <span
                             class="comment-date">{{ comment.created_at }}</span>
+
+                        {% if comment.is_user_comment %}
+                            - <span class="bi delete-button bi-trash-fill" comment-id="{{ comment.id }}">{{ comment.user__email }}</span>
+                        {% endif %}
                     </h3>
                     <p class="comment-content">{{ comment.content }}</p>
                 </div>

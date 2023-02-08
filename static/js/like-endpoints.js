@@ -25,7 +25,7 @@ likeButtons.forEach(button => {
         }).then(response => {
             // if request is successful (action is performed)
             if (response.ok) {
-                if (method === "delete"&&window.location.pathname==="/favorite/") {
+                if (method === "delete" && window.location.pathname === "/favorite/") {
                     button.parentNode.parentNode.parentNode.style.display = "none";
                 } else {
                     button.classList.toggle('bi-star');
