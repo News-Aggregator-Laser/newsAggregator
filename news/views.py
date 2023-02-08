@@ -5,10 +5,7 @@ from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from json import dumps
-import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-from datetime import datetime, timedelta
+from ml_logic.suggestions_generator import generate_suggestions
 
 
 def authenticated_required(function=None, redirect_url="login"):
@@ -86,21 +83,43 @@ def _encode_article(article: News) -> dict:
 
 def _news_to_json(news) -> str:
     """encode the list of news to json (to parse it in client side)"""
-    return dumps([_encode_article(article) for article in set(news)])
+    return dumps([_encode_article(article) for article in news])
+
+
+def _get_recent_liked_news(user_id: int, limit: int = 10) -> list[News]:
+    recent_liked_news = (
+        News.objects.filter(like__user_id=user_id)
+        .annotate(like_count=Count("like"))
+        .order_by("-publish_date")
+    )
+    try:
+        return recent_liked_news[:limit]
+    except IndexError:
+        return recent_liked_news
+
+
+def _get_recent_news_from_history(user_id: int, limit: int = 10) -> list[News]:
+    history = History.objects.filter(user_id=user_id).order_by("-time")
+    news = [News.objects.filter(id=h.news_id).first() for h in history]
+    try:
+        return news[:limit]
+    except IndexError:
+        return news
 
 
 # ==================== End Points ====================#
 
+
 def registration(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('login')
+            return redirect("login")
     else:
         form = UserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, "registration/register.html", {"form": form})
 
 
 def home(request):
@@ -287,7 +306,7 @@ def search(request):
                 {
                     **_common_vars(request.user.is_anonymous),
                     "news": _news_to_json(search_results),
-                    "title": "Search Results",
+                    "title": f"Results for '{search_query}'",
                 },
             )
     return render(
@@ -303,60 +322,28 @@ def search(request):
 
 @authenticated_required
 def your_feed(request):
-    recent_liked_news = (
-        News.objects.filter(like__user_id=request.user.id)
-        .annotate(like_count=Count("like"))
-        .order_by("-publish_date")[:5]
-    )
-    recent_unliked_news = (
-        News.objects.exclude(like__user_id=request.user.id)
-        .filter(history__user=request.user.id)
-        .order_by("-publish_date")[:5]
-    )
-    recent_news_set = recent_liked_news | recent_unliked_news
-    # Load the data
-    ten_days_ago = datetime.now() - timedelta(days=1000)
-    news_data = News.objects.filter(publish_date__gt=ten_days_ago).values(
-        "id", "title", "subtitle", "content", "news_category__name", "news_author__name"
-    )
-    df = pd.DataFrame.from_records(news_data)
-    # Define the vectorizer
-    vectorizer = TfidfVectorizer()
-    # Extract the features
-    df["concatenated_fields"] = df["title"].str.cat(
-        df[["subtitle", "content", "news_category__name", "news_author__name"]], sep=" "
-    )
-    X = vectorizer.fit_transform(df["concatenated_fields"])
-    # Compute the similarity matrix
-    similarity = cosine_similarity(X)
-    # Get recommendations for a news article
-    news_set = News.objects.none()
-    for news_recent_item in recent_news_set:
-        indices = similarity[news_recent_item.id - 1].argsort()[-10:][::-1]
-        for i in indices:
-            similarity_coefficient = similarity[news_recent_item.id - 1][i]
-            if similarity_coefficient > 0.1:
-                print(
-                    "Similarity between feature vectors",
-                    news_recent_item.id - 1,
-                    "and",
-                    i,
-                    "is:",
-                    similarity_coefficient,
-                )
-                rec = df.iloc[i]["title"]
-                news_set = news_set | News.objects.filter(title=rec)
+    recent_liked_news = _get_recent_liked_news(request.user.id, 20)
+    history_news = _get_recent_news_from_history(request.user.id, 20)
+    suggestions = generate_suggestions(list(recent_liked_news) + list(history_news), 20)
 
-    recommended_news_set = news_set.difference(recent_news_set)
-    recommended_news_set = _add_read_later_like_to_news(
-        recommended_news_set, request.user
-    )
+    if not suggestions:
+        suggestions = (
+            News.objects.all()
+            .filter(
+                is_archived=False,
+                news_author__is_active=True,
+                news_source__is_active=True,
+            )
+            .order_by("-publish_date")[:10]
+        )
     return render(
         request,
         "news_list.html",
         {
             **_common_vars(request.user.is_anonymous),
-            "news": _news_to_json(recommended_news_set),
+            "news": _news_to_json(
+                _add_read_later_like_to_news(suggestions, request.user)
+            ),
             "title": "your feed",
         },
     )
