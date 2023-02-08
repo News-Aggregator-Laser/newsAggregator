@@ -115,7 +115,7 @@ header .logo-cont {
 .search-box button {
     background-color: var(--main-font-color);
     color: #fff;
-    padding: 0px 8px;
+    padding: 0 8px;
 }
 
 
@@ -227,7 +227,6 @@ header .logo-cont {
 .swiper-button-next {
     background-color: rgba(0, 0, 0, 0.5);
     color: var(--accent-color) !important;
-    color: var(--accent-color) !important;
     fill: var(--accent-color) !important;
     stroke: var(--accent-color) !important;
     padding: 25px;
@@ -310,13 +309,13 @@ header .logo-cont {
 }
 
 /* tooltip style*/
-.article .interaction-btn-tooltip {
+.img-cont .interaction-btn-tooltip, .article .interaction-btn-tooltip {
     visibility: hidden;
-    width: 0px;
+    width: 0;
     background-color: rgba(0, 0, 0, 0.7);
     color: #fff;
     padding: 5px;
-    border-radius: 5px 0px 5px 5px;
+    border-radius: 5px 0 5px 5px;
     position: absolute;
     top: 100%;
     right: 75%;
@@ -333,6 +332,8 @@ header .logo-cont {
 /* Show the tooltip on hover */
 .article .read-later-btn:hover .interaction-btn-tooltip,
 .article .favorite-btn:hover .interaction-btn-tooltip,
+.img-cont .read-later-btn:hover .interaction-btn-tooltip,
+.img-cont .favorite-btn:hover .interaction-btn-tooltip,
 .article .history-remove-btn:hover .interaction-btn-tooltip {
     visibility: visible;
     width: max-content;
@@ -596,7 +597,7 @@ header .logo-cont {
 .article-view-cont .article-details-cont .author-and-date {
     border-left: 3px solid var(--main-font-color);
     padding-left: 5px;
-    margin: 5px 0px;
+    margin: 5px 0;
     font-weight: 600;
 }
 
@@ -877,7 +878,6 @@ footer .category a {
 .contact-form-area .form-control {
     position: relative;
     z-index: 2;
-    height: 54px;
     width: 60%;
     background-color: #f0f4f8;
     font-size: 1.1rem;

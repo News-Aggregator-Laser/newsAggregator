@@ -9,8 +9,8 @@
             <img src="{{ article.url_image }}" alt="{{ article.title }}">
             <div class="flex-container">
                 <i style="margin-right:35px;"
-                    class="bi {% if article.favorite %}bi-star-fill{% else %}bi-star{% endif %} favorite-btn"
-                    data-post-id="{{ article.id }}">
+                   class="bi {% if article.favorite %}bi-star-fill{% else %}bi-star{% endif %} favorite-btn"
+                   data-post-id="{{ article.id }}">
                     <span class="interaction-btn-tooltip">
                         {% if article.favorite %}Remove from favorite
                         {% else %}Add To favorite
@@ -18,7 +18,7 @@
                     </span>
                 </i>
                 <i class="bi {% if article.readLater %}bi-bookmark-fill{% else %}bi-bookmark{% endif %} read-later-btn"
-                    data-post-id="{{ article.id }}">
+                   data-post-id="{{ article.id }}">
                     <span class="interaction-btn-tooltip">
                         {% if article.readLater %}Remove from Read-Later
                         {% else %}Add To Read-Later

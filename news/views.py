@@ -210,6 +210,7 @@ def article(request, article_id: int):
         news_author__is_active=True,
         news_source__is_active=True,
     )
+    articles = _add_read_later_like_to_news([articles], request.user)[0]
     return render(
         request,
         "article_details.html",
