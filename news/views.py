@@ -78,6 +78,7 @@ def _encode_article(article: News) -> dict:
         "url_image": article.url_image,
         "news_category": article.news_category.name,
         "news_author": article.news_author.name,
+        "news_source": article.news_source.name,
         "readLater": article.readLater if article.readLater else False,
         "favorite": article.favorite if article.favorite else False,
     }
@@ -210,7 +211,9 @@ def article(request, article_id: int):
         if request.user.is_anonymous:
             return redirect("login")
         comment = request.POST.get("comment")
-        comment = Comment.objects.create(user=request.user, news_id=article_id, content=comment)
+        comment = Comment.objects.create(
+            user=request.user, news_id=article_id, content=comment
+        )
         comment.save()
         return redirect("/article/" + str(article_id))
     else:
@@ -221,12 +224,19 @@ def article(request, article_id: int):
             news_source__is_active=True,
         )
         articles = _add_read_later_like_to_news([articles], request.user)[0]
-        comments = Comment.objects.filter(news_id=article_id).values('id', 'user__username', 'content', 'created_at').order_by('-created_at')
+        comments = (
+            Comment.objects.filter(news_id=article_id)
+            .values("id", "user__username", "content", "created_at")
+            .order_by("-created_at")
+        )
         for comment in comments:
-            if request.user.is_authenticated and request.user.username == comment['user__username']:
-                comment['is_user_comment'] = True
+            if (
+                request.user.is_authenticated
+                and request.user.username == comment["user__username"]
+            ):
+                comment["is_user_comment"] = True
             else:
-                comment['is_user_comment'] = False
+                comment["is_user_comment"] = False
 
         return render(
             request,
