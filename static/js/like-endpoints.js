@@ -31,8 +31,8 @@ likeButtons.forEach(button => {
                     button.classList.toggle('bi-star');
                     button.classList.toggle('bi-star-fill');
                 }
-            } else {
-                window.location.href = "/login";
+            } else if (response.status === 403) {
+                window.location.href = "/login/?next=" + window.location.pathname + ';like;' + postId;
             }
         })
     });

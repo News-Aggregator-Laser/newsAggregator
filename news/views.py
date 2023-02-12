@@ -3,11 +3,48 @@ from json import dumps
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import LoginView
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect
+from django.urls import reverse
 
 from ml_logic.suggestions_generator import generate_suggestions
 from .models import *
+
+
+class MyLoginView(LoginView):
+    template_name = 'registration/login.html'
+
+    def form_valid(self, form):
+        # Call the parent form_valid method to perform the default action
+        super().form_valid(form)
+        try:
+            action = str(self.request.POST.get('next')).split(';')[1]
+            id = str(self.request.POST.get('next')).split(';')[2]
+            if action == 'read_later':
+                try:
+                    read_later = ReadLater.objects.get(user=self.request.user, news_id=id)
+                    read_later.is_removed = False
+                    read_later.save()
+                except ReadLater.DoesNotExist:
+                    ReadLater.objects.create(user=self.request.user, news_id=id).save()
+            elif action == 'like':
+                try:
+                    like = Like.objects.get(user=self.request.user, news_id=id)
+                    like.is_removed = False
+                    like.save()
+                except Like.DoesNotExist:
+                    Like.objects.create(user=self.request.user, news_id=id).save()
+            elif action == 'comment':
+                content = str(self.request.POST.get('next')).split(';')[3]
+                Comment.objects.create(user=self.request.user, news_id=id, content=content).save()
+        except IndexError:
+            pass
+
+        next_page = str(self.request.POST.get('next')).split(';')[0]
+
+        # Return the desired redirect URL
+        return redirect(next_page)
 
 
 def authenticated_required(function=None, redirect_url="login"):
@@ -209,7 +246,9 @@ def author(request, author: str):
 def article(request, article_id: int):
     if request.method == "POST":
         if request.user.is_anonymous:
-            return redirect("login")
+            next_page = request.path + ';comment;' + str(article_id) + ';' + request.POST.get("comment")
+            url = reverse('login') + '?next=' + next_page
+            return redirect(url)
         comment = request.POST.get("comment")
         comment = Comment.objects.create(
             user=request.user, news_id=article_id, content=comment
@@ -231,8 +270,8 @@ def article(request, article_id: int):
         )
         for comment in comments:
             if (
-                request.user.is_authenticated
-                and request.user.username == comment["user__username"]
+                    request.user.is_authenticated
+                    and request.user.username == comment["user__username"]
             ):
                 comment["is_user_comment"] = True
             else:

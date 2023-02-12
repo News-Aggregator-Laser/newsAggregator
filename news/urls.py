@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, category, article, read_later, history, your_feed, favorite, registration, author, search
+from .views import home, category, article, read_later, history, your_feed, favorite, registration, author, search, MyLoginView
 
 urlpatterns = [
     path("", home),
@@ -11,5 +11,6 @@ urlpatterns = [
     path("your_feed/", your_feed),
     path("favorite/", favorite),
     path("registration/", registration),
-    path("search/", search)
+    path("search/", search),
+    path('login/', MyLoginView.as_view(), name='login'),
 ]
