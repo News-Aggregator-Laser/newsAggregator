@@ -1,21 +1,23 @@
 # Django News Aggregator Project
 
-## Requirements
+## Overview
 
-News aggregator: web page that can integrates multiple web crawlers to collect and display news from various sources.
+This is a Django-based news aggregator web page that integrates multiple web crawlers to collect and display news from
+various sources. It offers several features to enhance the user's experience, including the ability to filter news based
+on the source, location, etc., personalize news viewing using AI algorithms, share news on social media, and comment on
+news articles.
 
-Features:
+## Features:
 
-- users should have the possibility to filter news based on the source , location.. etc.
-- Artificial intelligence should be applied to offer customized news viewing: news appear depending on the previous
-  user's queries and viewing habits .
-- users should have the possibility to share specific news on social media .
-- users should have the possibility to comment on news.
+- Filter news based on various criteria such as source, category, etc.
+- Customized news viewing using AI algorithms, with news appearing based on the user's previous queries and viewing
+  habits.
+- Share news on social media.
+- Comment on news articles.
 
-## Introduction
+## Project Structure
 
-This is a Django project that serves as a news aggregator, allowing users to access news articles from multiple APIs in
-one place. The project consists of several apps, including:
+The project consists of several apps and packages, including:
 
 - `api` Contains endpoints to access news data from multiple APIs, as well as functionalities such as adding,
   removing, liking, and commenting on news articles.
