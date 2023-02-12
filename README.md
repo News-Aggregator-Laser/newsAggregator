@@ -50,6 +50,15 @@ The project consists of several apps and packages, including:
 10. Django REST Framework: Used for creating the API endpoints.
 11. Django Social Share: Used for adding social media sharing buttons to the website.
 
+## Requirements
+
+To run the project, you will need to install the required packages in the requirements.txt file. You can do this by
+running the following command:
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Conclusion
 
 This Django project provides a comprehensive news aggregator solution, combining data from multiple APIs and using
