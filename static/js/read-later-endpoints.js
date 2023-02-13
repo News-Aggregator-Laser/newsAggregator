@@ -32,8 +32,8 @@ readLaterButtons.forEach(button => {
                     button.classList.toggle('bi-bookmark');
                     button.classList.toggle('bi-bookmark-fill');
                 }
-            } else {
-                window.location.href = "/login";
+            } else if (response.status === 403) {
+                window.location.href = "/login/?next=" + window.location.pathname + ';read_later;' + postId;
             }
         })
     });

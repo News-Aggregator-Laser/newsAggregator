@@ -113,3 +113,8 @@ function handleActiveMenu() {
 }
 
 document.body.addEventListener("click", handleActiveMenu, true);
+
+
+window.addEventListener("load", () => {
+    document.getElementById('login').href = "/login/?next=" + window.location.pathname;
+});

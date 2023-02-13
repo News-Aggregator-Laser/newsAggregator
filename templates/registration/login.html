@@ -4,7 +4,7 @@
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
         <h3>Welcome</h3>
-
+        <input type="hidden" name="next" value="{{ next }}">
         <label for="username">Username</label>
         <input type="text" placeholder="Username" name="username">
 
