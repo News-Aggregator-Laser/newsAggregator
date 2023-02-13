@@ -42,9 +42,10 @@ class MyLoginView(LoginView):
             pass
 
         next_page = str(self.request.POST.get('next')).split(';')[0]
-
         # Return the desired redirect URL
-        return redirect(next_page)
+        if next_page:
+            return redirect(next_page)
+        return redirect('/')
 
 
 def authenticated_required(function=None, redirect_url="login"):
