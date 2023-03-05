@@ -72,6 +72,7 @@ const category_swiper = new Swiper(".category-swiper", {
     autoplay: {
         delay: 5000,
         disableOnInteraction: false,
+        pauseOnMouseEnter: true,
     },
 });
 
