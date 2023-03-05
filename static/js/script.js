@@ -1,8 +1,14 @@
 // ========== Main search section ========== //
 function toggleSearch() {
     const searchCont = document.querySelector(".search-cont");
+    //show search container
     if (searchCont.style.display === 'none') {
         searchCont.style.display = 'flex';
+        // hide menu if open
+        if(document.querySelector(".menu").style.display === 'flex') {
+            toggleMenu();
+        }
+    // hide search container
     } else {
         searchCont.style.display = 'none';
     }
@@ -16,10 +22,12 @@ document.querySelector(".search-icon").addEventListener("click", toggleSearch);
 function toggleMenu() {
     const menu = document.querySelector(".menu");
     const icon = document.querySelector("#menu-btn .bi");
+    // show menu
     if (menu.style.display === 'none') {
         menu.style.display = 'flex';
         icon.classList.remove("bi-list");
         icon.classList.add("bi-x-square");
+    // hide menu
     } else {
         menu.style.display = 'none';
         icon.classList.remove("bi-x-square");
@@ -104,17 +112,18 @@ function checkImages() {
 
 checkImages();
 
-// ========== Handle active menu ========== //
-function handleActiveMenu() {
-    const menu = document.querySelector(".menu");
-    if (menu.style.display === 'flex') {
-        toggleMenu();
-    }
-}
+// // ========== Handle active menu ========== //
+// function handleActiveMenu() {
+//     const menu = document.querySelector(".menu");
+//     if (menu.style.display === 'flex') {
+//         toggleMenu();
+//     }
+// }
 
-document.body.addEventListener("click", handleActiveMenu, true);
+// document.body.addEventListener("click", handleActiveMenu, true);
 
 
+// ========== Handle redirection ========== //
 window.addEventListener("load", () => {
     document.getElementById('login').href = "/login/?next=" + window.location.pathname;
 });
