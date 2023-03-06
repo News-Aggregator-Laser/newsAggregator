@@ -7,7 +7,7 @@
 }
 
 body {
-    background-color: #080710;
+    background-color: #F4E6D9;
 }
 
 .background {
@@ -28,8 +28,8 @@ body {
 
 .shape:first-child {
     background: linear-gradient(
-            #1845ad,
-            #23a2f6
+            #864611,
+            #c56618
     );
     left: -80px;
     top: -80px;
@@ -38,15 +38,14 @@ body {
 .shape:last-child {
     background: linear-gradient(
             to right,
-            #ff512f,
-            #f09819
+            #121212,
+            #353535
     );
     right: -30px;
     bottom: -80px;
 }
 
 form {
-
     width: 400px;
     background-color: rgba(255, 255, 255, 0.13);
     position: absolute;
@@ -62,7 +61,7 @@ form {
 
 form * {
     font-family: 'Poppins', sans-serif;
-    color: #ffffff;
+    color: #000000;
     letter-spacing: 0.5px;
     outline: none;
     border: none;
@@ -86,7 +85,7 @@ input {
     display: block;
     height: 50px;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: rgb(255, 255, 255);
     border-radius: 3px;
     padding: 0 10px;
     margin-top: 8px;
@@ -95,19 +94,24 @@ input {
 }
 
 ::placeholder {
-    color: #e5e5e5;
+    color: #222222d2;
 }
 
 button {
     margin-top: 50px;
     width: 100%;
-    background-color: #ffffff;
+    background-color: #FACA9D;
     color: #080710;
     padding: 15px 0;
     font-size: 18px;
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+button:hover{
+    background-color: #e4a56a;
 }
 
 .social {
@@ -119,8 +123,8 @@ button {
 .social div {
     border-radius: 3px;
     padding: 5px 10px 10px 5px;
-    background: rgba(255, 255, 255, 0.27);
-    color: #eaf0fb;
+    background: rgba(185, 181, 181, 0.27);
+    color: #222222;
     text-align: center;
 }
 
