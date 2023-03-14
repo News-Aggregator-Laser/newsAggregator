@@ -7,8 +7,10 @@ from jsonpath_ng import parse
 
 from django.db import IntegrityError
 
+from ml_logic.simularity import simularity_coefficient
 from news.models import Author, NewsSource, Tags
 from ml_logic.tags_extractor import extract_tags
+from datetime import datetime, timedelta
 
 
 def normalize_author(author):
@@ -104,6 +106,8 @@ class RequestProvider:
             except IndexError:
                 return None
 
+        ten_days_ago = datetime.now() - timedelta(days=1000)
+        recent_news = News.objects.filter(publish_date__gt=ten_days_ago)
         for news in response[self.provider.dataPath_map]:
             title = get_value(title_expr)
             sub_title = get_value(sub_title_expr)
@@ -168,6 +172,8 @@ class RequestProvider:
                 news_author=author_m,
                 news_source=news_source_m,
             )
+            if simularity_coefficient(news_m, recent_news) > 0.7:
+                continue
             try:
                 news_m.save()
                 # extract tags and save them

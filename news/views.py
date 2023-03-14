@@ -184,6 +184,8 @@ def home(request):
         )
         for category in common_vars["selected_categories"]
     }
+    for top_news in top_categories_news.values():
+        top_news = _add_read_later_like_to_news(top_news, request.user)
     popular_news = (
         News.objects.all()
         .filter(
