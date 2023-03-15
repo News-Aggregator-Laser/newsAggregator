@@ -996,6 +996,10 @@ footer .category a {
     .article-info-cont{
         font-size: 1.2em;
     }
+
+    .article-view-cont .article-details-cont .img-cont {
+        min-height: 50px;
+    }
 }
 
 @media (max-width: 768px){
@@ -1033,10 +1037,9 @@ footer .category a {
     footer .category-container{
         order: 0;
         width: 100%;
-        margin: 0 5px;
-        margin-bottom: 15px;
-    } 
-    
+        margin: 0 5px 15px;
+    }
+
     footer .col-3{
         order: 1;
         width: 100vw;
