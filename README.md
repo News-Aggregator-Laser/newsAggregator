@@ -58,7 +58,6 @@ The project consists of several apps and packages, including:
 ![Screenshot 4](./README_images/Screenshot%202023-04-06%20143742.png)
 ![Screenshot 5](./README_images/Screenshot%202023-04-06%20143847.png)
 ![Screenshot 6](./README_images/Screenshot%202023-04-06%20145443.png)
-![Database](./README_images/Screenshot%202023-04-06%20144650.png)
 
 
 ## Requirements
