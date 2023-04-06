@@ -51,7 +51,6 @@
 <!--handle news variable and make in Global -->
 <script>
     {% if news %}
-        console.log("OKK");
         var articles = JSON.parse('{{ news|escapejs }}');
     {% endif %}
 </script>

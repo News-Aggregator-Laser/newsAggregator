@@ -50,6 +50,16 @@ The project consists of several apps and packages, including:
 10. Django REST Framework: Used for creating the API endpoints.
 11. Django Social Share: Used for adding social media sharing buttons to the website.
 
+## Screenshots
+![Login Page](./README_images/Screenshot%202023-04-06%20143925.png)
+![Screenshot 1](./README_images/Screenshot%202023-04-06%20143518.png)
+![Screenshot 2](./README_images/Screenshot%202023-04-06%20143722.png)
+![Screenshot 3](./README_images/Screenshot%202023-04-06%20143827.png)
+![Screenshot 4](./README_images/Screenshot%202023-04-06%20143742.png)
+![Screenshot 5](./README_images/Screenshot%202023-04-06%20143847.png)
+![Database](./README_images/Screenshot%202023-04-06%20144650.png)
+
+
 ## Requirements
 
 To run the project, you will need to install the required packages in the requirements.txt file. You can do this by
